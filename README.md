@@ -25,8 +25,16 @@
 - 📌 **Interactive Pinboard ("My Board")**:
   - Drag-and-drop interactive pinboard.
   - Pin stories, topics, and startup profiles.
+  - Real-time pinned counter badge in the navigation header.
   - Save board state locally in the browser via `localStorage`.
   - Shareable board links.
+- 🎯 **Interactive Guided Walkthrough**:
+  - Multi-step interactive spotlight tour guiding new visitors through features.
+  - Highlights pinning, navigation, and board management.
+  - Accessible keyboard navigation (Arrow keys, Esc) and "Quick tour" replay button.
+- 📸 **Instagram Updates Widget**:
+  - Floating slide-in social story updates carousel linked to [@udyammanch](https://www.instagram.com/udyammanch/).
+  - Interactive story navigation, touch swiping, direct profile link, and quick bubble minimize.
 - 🌗 **Dark Mode & Light Mode**: Fluid theme toggle with persistent user preference storage and system preference auto-detection.
 - ⚡ **Zero-Dependency Architecture**: Built entirely with clean, vanilla HTML5, CSS3, and JavaScript — lightning fast with zero build steps required.
 - 📱 **Fully Responsive**: Optimized for desktops, tablets, and smartphones with fluid responsive grids and accessible focus states.
@@ -38,10 +46,11 @@
 
 ```text
 UdyamManch/
-├── index.html                     # Primary entry point for static hosting (GitHub Pages)
-├── udyam-manch-magazine-new.html  # Full standalone magazine & web application source
-├── .gitignore                     # Git ignore rules
-└── README.md                      # Project documentation
+├── index.html                              # Primary entry point for static hosting (GitHub Pages)
+├── udyam-manch-magazine-walk(1) copy.html  # Full standalone magazine & web application source
+├── .gitignore                              # Git ignore rules
+├── LICENSE                                 # MIT License
+└── README.md                               # Project documentation
 ```
 
 ---
