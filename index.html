@@ -302,6 +302,23 @@ body{font-size:17px}.body{font-size:19px}
 .tar{position:fixed;left:0;top:0;width:40px;height:50px;pointer-events:none;opacity:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45));transition:left .45s cubic-bezier(.3,.9,.3,1),top .45s cubic-bezier(.3,.9,.3,1),opacity .3s,transform .3s}
 .tar svg{display:block;animation:tbo .9s ease-in-out infinite}@keyframes tbo{50%{transform:translateY(-9px)}}
 </style>
+<style id="masonry">
+@media(max-width:700px){
+.phero .pbboard{display:block;column-count:2;column-gap:14px;padding-bottom:28px}
+.phero .pbboard>.pbcard{break-inside:avoid;-webkit-column-break-inside:avoid;margin:0 0 20px;width:100%;display:flex}
+.phero .pbboard>.pbcard.pblead{column-span:all}
+.phero .pbboard>.pbcard:nth-child(3n+1) .pbart{min-height:190px!important}
+.phero .pbboard>.pbcard:nth-child(3n+2) .pbart{min-height:120px!important}
+.phero .pbboard>.pbcard:nth-child(3n) .pbart{min-height:150px!important}
+.phero .pbcard h3{font-size:19px!important;line-height:1.1}
+.phero .pbquote p{font-size:19px}
+.phero .pbcard .pbbig{font-size:48px}
+.phero .mbb{display:block;column-count:2;column-gap:14px;padding:26px 12px 8px;min-height:260px}
+.phero .mbb>.mbn{position:static;display:block;width:100%;break-inside:avoid;-webkit-column-break-inside:avoid;margin:0 0 22px;transform:rotate(calc(var(--r,0deg) * .5));touch-action:auto}
+.phero .mbb>.mbe{column-span:all}
+.phero .mbn h3{font-size:17px}
+}
+</style>
 </head>
 <body>
 <div id="pg"></div>
