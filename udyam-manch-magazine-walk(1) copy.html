@@ -624,7 +624,8 @@ new MutationObserver(function(){requestAnimationFrame(watch)}).observe(m,{childL
 </script>
 <script id="tour">
 (function(){
-var K='um-tour',m=document.getElementById('m'),rm=matchMedia('(prefers-reduced-motion:reduce)').matches,ov,sp,ar,tp,i=-1,on=false,ti=null;
+var K='um-tour-v2',m=document.getElementById('m'),rm=matchMedia('(prefers-reduced-motion:reduce)').matches,ov,sp,ar,tp,i=-1,on=false,ti=null;
+if(/[?&]tour=reset/.test(location.search)){try{localStorage.removeItem(K)}catch(e){}}
 function seen(){try{return localStorage.getItem(K)==='1'}catch(e){return false}}
 function done(){try{localStorage.setItem(K,'1')}catch(e){}}
 var T=[{h:'Try My board',p:'Pin the stories and topics you care about and keep them on a pinboard of your own. It takes about 20 seconds to try.'},
@@ -657,7 +658,6 @@ function hit(e){if(e.target.closest('.ttp'))return;var el=inHole(e);if(!el)retur
 function start(){if(!ov)mk();var ed=document.querySelector('.mbt [data-tab="ed"]');if(ed)ed.click();on=true;window.__tourOn=true;ov.classList.add('on');show(0)}
 function end(){if(!on)return;on=false;done();ov.classList.remove('on');window.__tourOn=false;if(window.__igApply)window.__igApply()}
 function maybe(){if(on||seen())return;var h=m.querySelector('.phero');if(!h||/^#\/board\//.test(location.hash))return;
- try{var d=JSON.parse(localStorage.getItem('um-board-v1'));if(d&&d.items&&d.items.length){done();return}}catch(e){}
  clearTimeout(ti);ti=setTimeout(function(){if(on||seen()||scrollY>200||!m.querySelector('.phero'))return;start()},1800)}
 function replay(){var sh=m.querySelector('.mbsh');if(!sh||sh.querySelector('.tourbtn'))return;var b=document.createElement('button');b.type='button';b.className='mbk tourbtn';b.style.marginLeft='8px';b.textContent='Quick tour';b.onclick=start;sh.appendChild(b)}
 new MutationObserver(function(){requestAnimationFrame(function(){maybe();replay()})}).observe(m,{childList:true});
