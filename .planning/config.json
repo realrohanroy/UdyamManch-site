@@ -1,0 +1,24 @@
+{
+  "project": "Udyam Manch",
+  "version": "1.0.0",
+  "framework": "GSD (Get Stuff Done)",
+  "active_phase": 1,
+  "phases_total": 5,
+  "strict_mode": true,
+  "verification": {
+    "require_tests": true,
+    "require_typecheck": true,
+    "require_a11y_check": true,
+    "require_mobile_validation": true,
+    "require_preview_card_validation": true
+  },
+  "constraints": {
+    "no_reader_accounts": true,
+    "no_public_story_submission": true,
+    "no_hash_links_for_articles": true,
+    "require_server_rendered_og_tags": true,
+    "enforce_slug_immutability_or_redirects": true,
+    "wcag_target": "AA",
+    "image_og_dimensions": "1200x630"
+  }
+}
