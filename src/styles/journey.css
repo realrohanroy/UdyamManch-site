@@ -1,0 +1,141 @@
+/* ==========================================================================
+   Founder journey components.  Prefix: fj  (Design_System.md section 11)
+   Builds on the prototype classes in editorial.css (hero-grid, stepper-card,
+   company-card, sidebar-*, related-*). Colours come only from tokens.css.
+   ========================================================================== */
+
+/* Tones: a block sets fj-t-<tone>, children read --t-line / --t-soft / --t-ink */
+.fj-t-gold   { --t-line: var(--tone-gold-line);   --t-soft: var(--tone-gold-soft);   --t-ink: var(--tone-gold-ink); }
+.fj-t-green  { --t-line: var(--tone-green-line);  --t-soft: var(--tone-green-soft);  --t-ink: var(--tone-green-ink); }
+.fj-t-teal   { --t-line: var(--tone-teal-line);   --t-soft: var(--tone-teal-soft);   --t-ink: var(--tone-teal-ink); }
+.fj-t-indigo { --t-line: var(--tone-indigo-line); --t-soft: var(--tone-indigo-soft); --t-ink: var(--tone-indigo-ink); }
+
+/* Hero extras */
+.fj-sample {
+  margin-left: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  letter-spacing: .04em;
+}
+.fj-dot { opacity: .4; margin: 0 4px; }
+.fj-share-top { margin-top: 18px; }
+.fj-sig-line { margin-top: 2px; display: block; }
+.fj-crumb-home { display: inline-block; vertical-align: -2px; }
+
+/* Steps: any number of steps, arrows between them */
+.fj-steps {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin: 2em 0 2.5em;
+  padding: 4px 0;
+}
+.fj-steps > .stepper-card { flex: 1 1 0; min-width: 0; }
+.fj-steps > .stepper-arrow { align-self: center; flex: none; }
+.stepper-card[class*="fj-t-"] {
+  border-top: 3.5px solid var(--t-line);
+  background: color-mix(in srgb, var(--t-soft) 30%, var(--paper));
+}
+.stepper-card[class*="fj-t-"] .st-icon {
+  background: var(--t-soft);
+  color: var(--t-ink);
+}
+
+/* Pull quote and note, ported from the prototype (.pq, .note) */
+.story-content .pq {
+  margin: 1.8em 0;
+  padding: 6px 0 6px 28px;
+  border-left: 5px solid var(--acc2);
+  font: italic 400 34px/1.25 var(--bd);
+  color: var(--ink);
+}
+.story-content .pq p { margin: 0; font: inherit; }
+.story-content .pq cite {
+  display: block;
+  margin-top: 12px;
+  font: 600 14px var(--hd);
+  font-style: normal;
+  color: var(--mute);
+}
+.story-content .note {
+  font: 500 14px/1.5 var(--hd);
+  color: var(--mute);
+  background: var(--soft);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 2em 0;
+}
+
+/* Figure caption */
+.fj-cap { padding: 0 14px 12px; }
+.fj-credit { opacity: .8; }
+
+/* Impact pillars */
+.fj-pillars {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 20px 12px;
+  margin: 2.5em 0 1em;
+  padding: 28px 24px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 4px 4px 60px 4px;
+}
+.fj-pillars li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  font: 700 12px/1.3 var(--hd);
+  color: var(--ink);
+}
+.fj-ic { color: var(--t-ink, var(--acc)); display: inline-grid; }
+
+/* Lists that are styled as grids */
+.fj-plain-list, .fj-topics, .fj-feats { list-style: none; margin: 0; padding: 0; }
+
+/* Sidebar: company features (2 x 2) */
+.fj-feats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fj-feat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.fj-feat-l { font: 700 12px/1.25 var(--hd); color: var(--ink); }
+.fj-feat-d { font: 500 11px/1.3 var(--hd); color: var(--mute); }
+.fj-logo { object-fit: contain; display: block; }
+
+/* Stats as a definition list: number shows above its label */
+.company-stats-grid { margin: 0; }
+.company-stats-grid .stat-cell { display: flex; flex-direction: column-reverse; }
+.company-stats-grid dd { margin: 0 0 3px; }
+
+/* Sidebar quote markup is figure > blockquote > p */
+.sidebar-quote-box { margin: 0; }
+.sidebar-quote-box blockquote { margin: 0; }
+
+/* Section titles are real h2s for screen readers but keep the label look */
+.fj-h-reset { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; margin: 0; }
+
+/* Topics */
+.fj-topics { display: flex; flex-wrap: wrap; gap: 8px; }
+.fj-topic { cursor: default; font-size: 13px; padding: 5px 12px; }
+
+@media (max-width: 900px) {
+  .story-content .pq { font-size: 27px; }
+}
+
+@media (max-width: 768px) {
+  .fj-steps { flex-direction: column; gap: 12px; }
+  .fj-steps > .stepper-arrow { transform: rotate(90deg); margin: -4px auto; }
+  .fj-pillars { padding: 22px 16px; }
+}

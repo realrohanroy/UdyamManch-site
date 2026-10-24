@@ -1,0 +1,115 @@
+/* ==========================================================================
+   Udyam Manch theme tokens. The ONLY place colour values live.
+   Design_System.md sections 2.1, 2.2 and 2.5. Components use var(--token).
+
+   Rule: every token is defined three times, in this order:
+     1. :root                                       light (default)
+     2. @media (prefers-color-scheme: dark)
+        :root:not([data-theme="light"])             system dark
+     3. :root[data-theme="dark"]                    manual dark toggle
+   Miss one and half your visitors see the wrong theme.
+   ========================================================================== */
+
+:root {
+  /* Core (2.1) */
+  --bg: #f1f3fa;
+  --ink: #13122b;
+  --mute: #5d5c78;
+  --line: #d6d9ea;
+  --card: #fff;
+  --acc: #5252a6;
+  --acc2: #4fb8ee;
+  --soft: #e3e6f6;
+
+  /* Type */
+  --hd: var(--font-sans, 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif);
+  --bd: var(--font-serif, 'Newsreader', Georgia, serif);
+  --script: var(--font-script, 'Caveat'), cursive;
+
+  /* Pinboard (2.2) */
+  --board: #E9ECF6;
+  --dot: #C9CEE3;
+  --paper: #FFFFFF;
+  --hl: #FFE36E;
+  --mbt: #FFE36E;
+  --mbx: #2a2400;
+  --indigo: #5455A5;
+  --blue: #5299D3;
+  --sky: #75D3F5;
+  --pin-pink: #E0457B;
+  --shadow: 0 1px 0 #fff inset, 0 10px 24px -12px rgba(20, 22, 58, .35);
+
+  /* Founder journey (2.5). From the kishanStoryHtml prototype.
+     A tone is a trio: line (accent edge), soft (fill), ink (icon/text on soft). */
+  --mark: #FFE58F;                 /* headline highlight */
+  --tone-gold-line: #f2aa1f;
+  --tone-gold-soft: #fef3c7;
+  --tone-gold-ink: #b45309;
+  --tone-green-line: #38a169;
+  --tone-green-soft: #dcfce7;
+  --tone-green-ink: #15803d;
+  --tone-teal-line: #2f855a;
+  --tone-teal-soft: #e6fffa;
+  --tone-teal-ink: #0d9488;
+  --tone-indigo-line: var(--acc);
+  --tone-indigo-soft: var(--soft);
+  --tone-indigo-ink: var(--acc);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e0d1f;
+    --ink: #eceaff;
+    --mute: #a09fc0;
+    --line: #28274a;
+    --card: #16152e;
+    --acc: #9c9bf2;
+    --acc2: #5fc3f5;
+    --soft: #1d1c3c;
+    --board: #0C0D22;
+    --dot: #23264D;
+    --paper: #171A3A;
+    --hl: #3B3F9E;
+    --mbt: #3B3F9E;
+    --mbx: #FFFFFF;
+    --shadow: 0 10px 28px -12px #000;
+    --mark: var(--hl); /* same blue highlight as the home page */
+    --tone-gold-line: #f2aa1f;
+    --tone-gold-soft: #3a2e14;
+    --tone-gold-ink: #f6c25b;
+    --tone-green-line: #48bb78;
+    --tone-green-soft: #16301f;
+    --tone-green-ink: #7ee2a8;
+    --tone-teal-line: #38b2ac;
+    --tone-teal-soft: #11302e;
+    --tone-teal-ink: #5eead4;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0e0d1f;
+  --ink: #eceaff;
+  --mute: #a09fc0;
+  --line: #28274a;
+  --card: #16152e;
+  --acc: #9c9bf2;
+  --acc2: #5fc3f5;
+  --soft: #1d1c3c;
+  --board: #0C0D22;
+  --dot: #23264D;
+  --paper: #171A3A;
+  --hl: #3B3F9E;
+  --mbt: #3B3F9E;
+  --mbx: #FFFFFF;
+  --shadow: 0 10px 28px -12px #000;
+  --mark: var(--hl); /* same blue highlight as the home page */
+  --tone-gold-line: #f2aa1f;
+  --tone-gold-soft: #3a2e14;
+  --tone-gold-ink: #f6c25b;
+  --tone-green-line: #48bb78;
+  --tone-green-soft: #16301f;
+  --tone-green-ink: #7ee2a8;
+  --tone-teal-line: #38b2ac;
+  --tone-teal-soft: #11302e;
+  --tone-teal-ink: #5eead4;
+}
