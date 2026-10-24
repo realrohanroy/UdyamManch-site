@@ -35,9 +35,9 @@ Evidence comes from the template and components in `src/components/journey/`, th
 |---|---------------------|----------|------------------|
 | D1 | The first screen does not say who, what, where. The facts exist in data (`company.industry`, `company.city`, `company.founded`, `listing.state`) but only the website is rendered. Design_System 5.7 and REQ-TMP-07 ask for a facts list. | `JourneySidebar.tsx` renders only name, summary, website, stats, features. Ayush has no stats, so his company card holds no numbers at all. | Give every story an "At a glance" facts row directly under the hero, built only from fields that exist. |
 | D2 | The hero is six equal-weight items in one column: tag, title, dek, pin button, byline, five share circles. Two outlined controls (pin, share) compete with the headline. | `JourneyHero.tsx`. Title wraps to 4 lines at 60px in a 542px column at 1440. | One clear order: headline, dek, byline, then actions. Give the title room (up to 76px, 2 to 3 lines). |
-| D3 | Reading text is smaller than the system says, and sidebar text is very small. Body is 19.5px (18px at 768 and below). Design_System says 20.5px and 19px. Sidebar and card text runs at 10, 10.5, 11, 11.5, 12 and 12.5px. | `editorial.css` `.story-content`, `.stat-lbl`, `.fj-feat-d`, `.related-cat`, `.related-meta`, `.stepper-card p`. | One type scale for the page. Nothing below 14px. Body at 20.5px / 19px. |
+| D3 | Reading text is smaller than the system says, and sidebar text is very small. Body is 19.5px (18px at 768 and below). Design_System says 20.5px and 19px. Sidebar and card text runs at 10, 10.5, 11, 11.5, 12 and 12.5px. | `editorial.css` `.story-content`, `.stat-lbl`, `.fj-feat-d`, `.related-cat`, `.related-meta`, `.stepper-card p`. | One type scale for the page: four size roles (section 4.2). Nothing below 14px. Body at 20.5px / 19px. |
 | D4 | The article has no signature moments. No drop cap (Design_System 2.3 and 5.7 require one). The pull quote is a plain 5px left rule. Figures use one uniform 18px radius with a shadow and a hover lift, which breaks "flat, hairline, asymmetric corner" (Design_System 2.4, 12). | `.field-banner-wrap`, `.story-content .pq`. | Use the brand: asymmetric corners that vary down the page, flat surfaces, a drop cap, breakout quotes. |
-| D5 | Steps are cramped. Four cards share 680px, so each is about 150px wide with 12px text and a 14px title. Mobile stacks them with rotated arrows. Steps use `h4` directly under `h2` (heading level skip). | `.fj-steps`, `blocks.tsx`. | Let process blocks use a wider tier (840px), 16px text, `ol` semantics, `h3` titles. |
+| D5 | Steps are cramped. Four cards share 680px, so each is about 150px wide with 12px text and a 14px title. Mobile stacks them with rotated arrows. Steps use `h4` directly under `h2` (heading level skip). | `.fj-steps`, `blocks.tsx`. | Let process blocks use a wider tier (840px), 14px text, 20.5px titles, `ol` semantics, `h3` titles. |
 | D6 | The sidebar is about 1150px tall at 1440 and `position: sticky`. A sticky box taller than the viewport cannot show its bottom, so Related, Share and Topics are effectively invisible until the article ends. It is also six boxes with four different radii and equal weight. | `.sidebar { position: sticky; top: 88px }`, screenshot. | Stop making one tall rail carry everything. Put the company profile and "keep reading" in a place readers actually reach. |
 | D7 | On phones the sidebar comes after the whole article, so company facts, related stories and share arrive last. Design_System 5.7 says facts come first on mobile. There is no sticky share bar, although over 70 percent of traffic is WhatsApp on mobile (REQ-NFR-03, REQ-TMP-09). | `.article-layout` collapses to one column at 1080px. | Facts first on mobile. A thumb-reach share bar with WhatsApp as the primary action. |
 | D8 | The page has no motion at all except hover lifts. `.rv` exists in CSS but is never used. There is no progress bar (Design_System 8.4 requires one). The hero image zooms on hover, which Design_System 9 forbids inside reading pages. | grep of `src/` for `.rv` and `progress`. `.hero-stage:hover .hero-double-portrait { transform: scale(1.02) }`. | One orchestrated load moment, a progress bar, calm once-only reveals. Remove the hover zoom. |
@@ -96,7 +96,7 @@ Shared radius family for all variants (Design_System 2.4): one large corner of 6
 | for a stronger India.                                                              |
 |                                                                                    |
 | +-- stage panel, --soft, 1192 wide, corner 4 4 90 4 -------------------------------+|
-| | dek 21px mute, 34em           |                [portrait, max 640 wide, right]    ||
+| | dek 20.5px mute, 34em         |                [portrait, max 640 wide, right]    ||
 | |                               |  script name (top left)       [quote card]        ||
 | | (UM) Udyam Manch Team         |                                                   ||
 | |      18 Oct 2026 . 2 min read |                        signature (bottom right)   ||
@@ -111,7 +111,7 @@ Shared radius family for all variants (Design_System 2.4): one large corner of 6
 | ------------------------------------------------------------------------------------|
 |                                                                                    |
 |                 +----------- text column 680 ------------+                         |
-|                 | A vision rooted in real challenges     |   h2 40px              |
+|                 | A vision rooted in real challenges     |   h2 34px              |
 |                 | G rowing up in India ... drop cap      |                         |
 |          +------+--- pull quote 840, corner 4 60 4 4 -----+------+                  |
 |          |  "  Agricultural waste is not a problem ...           |                  |
@@ -120,7 +120,7 @@ Shared radius family for all variants (Design_System 2.4): one large corner of 6
 |     |                         photo, caption, credit                        |        |
 |     +-----------------------------------------------------------------------+        |
 |                 | From waste to several sources of value |                         |
-|          +--- steps 840, four cards in a row, 16px text ---+                        |
+|          +--- steps 840, four cards in a row, 14px text ---+                        |
 |          | (1) Waste -> (2) Digestion -> (3) CBG -> (4) Fertiliser |                 |
 |                 | Building a sustainable and scalable future |                       |
 |          +--- pillars band 840, corner 4 4 60 4 ---+                                |
@@ -134,7 +134,7 @@ Shared radius family for all variants (Design_System 2.4): one large corner of 6
 | Share this story (wa)(in)(x)(f)(link)         Topics: Renewable energy, CBG, ...   |
 | Keep reading:  [ Read next: large card ]  [ row ]  [ row ]                          |
 +------------------------------------------------------------------------------------+
-ShareDock pill (bottom centre, 56px) shows after the stage leaves view, hides at the end share.
+ShareDock pill (bottom centre, 48px) shows after the stage leaves view, hides at the end share.
 ```
 
 **Mobile wireframe, 390 (content 358, side padding 16)**
@@ -154,7 +154,7 @@ ShareDock pill (bottom centre, 56px) shows after the stage leaves view, hides at
 | |           signature BR |
 | +----------------------+ |
 | quote card (in flow)     |
-| dek 20px                 |
+| dek 19px                 |
 | (UM) Udyam Manch Team    |
 |      18 Oct 2026 . 2 min |
 | [ Pin to My board ]      |
@@ -201,8 +201,8 @@ ShareDock pill (bottom centre, 56px) shows after the stage leaves view, hides at
 | +------------ hero, 7 / 5 split, 1192 -----------------------------------------+ |
 | | * FOUNDER STORY  Clean energy [Sample]   |  +-- portrait card ------------+   | |
 | | From agricultural waste to [clean        |  | corner 4 4 90 4             |   | |
-| | energy] for a stronger India.  60px      |  | stage: script, quote,       |   | |
-| | dek 21px                                 |  | signature                   |   | |
+| | energy] for a stronger India.  display   |  | stage: script, quote,       |   | |
+| | dek 20.5px                               |  | signature                   |   | |
 | | (UM) Udyam Manch Team . 18 Oct . 2 min   |  +-----------------------------+   | |
 | | [Pin to My board] (wa)(in)(x)(f)(link)   |                                    | |
 | +--------------------------------------------------------------------------------+ |
@@ -211,7 +211,7 @@ ShareDock pill (bottom centre, 56px) shows after the stage leaves view, hides at
 | | G rowing up ... (drop cap)             |   | summary (2 lines)                 | |
 | | pull quote (680, corner 4 60 4 4)      |   | [Visit website] [copy]            | |
 | | figure (680, corner 4 4 4 80)          |   | Founder / Industry / Based in     | |
-| | steps (680, 2 x 2 grid, 16px text)     |   | Founded                            | |
+| | steps (680, 2 x 2 grid, 14px text)     |   | Founded                            | |
 | | pillars (680)                          |   | In this story                      | |
 | |                                        |   |  o A vision rooted...  (active)    | |
 | |                                        |   |  | From waste to...                | |
@@ -392,10 +392,10 @@ Multiples of 4 only (Design_System 2.4). Values for the reading page:
 | 3xl | 64px | Section rhythm on desktop, h2 top margin on desktop |
 
 Exceptions (each deliberate):
-- 12px is allowed where Design_System already uses it (chip padding, stat cell padding).
-- Paragraph gap is 28px at desktop and 24px at 900px and below (about 1.4em of body size, written as a multiple of 4).
-- Touch targets are 40px (Design_System 4.2). The mobile ShareDock buttons are 44px for thumb reach.
-- Mobile section rhythm is 40px (Design_System 2.4).
+- 12px is allowed because Design_System 2.4 lists it in its common values (8, 12, 16, 24, 32, 48, 64). Used for chip padding, stat cell padding and the related row hover shift.
+- Paragraph gap is 24px at every width (about 1.2em of body size). Snapped from 28px on desktop.
+- Touch targets are 40px (Design_System 4.2). The mobile ShareDock buttons are 48px for thumb reach (8px padding plus 48px buttons gives the 64px bar), snapped from 44px. The `Visit website` button is 48px high, snapped from 44px. The desktop ShareDock pill is 48px high (40px buttons plus 4px padding), snapped from 56px. Pull quote padding is 32px 48px, snapped from 32px 40px.
+- 40px appears only as the mobile section rhythm, which Design_System 2.4 gives as "about 40px on mobile". It is not used anywhere else.
 - Sticky top offset is `calc(var(--fj-hdr) + 20px)` = 88px. `--fj-hdr` is 68px. See component-scoped custom properties in section 7.4.
 - Reading column 680px, mid tier 840px, wide tier 1100px (Design_System 3.1 sets 680 and 1100; 840 is the "breaks out slightly" tier).
 
@@ -403,23 +403,36 @@ Exceptions (each deliberate):
 
 Fonts: Bricolage Grotesque for headings, UI, labels, stats. Newsreader for reading text, dek, quotes. Caveat only inside the stage decorations.
 
-Weights on this page: Regular 400 (Newsreader text) and Bold 700 (Bricolage UI text and labels). Display exception from Design_System 2.3: h1, h2 and large stat numbers use 800. Weights 500 and 600 are removed from this page.
+Contract on this page: **four size roles plus one exempt decorative tier, and two weights (400 and 700) plus one named waiver for 800.** These caps are scoped to the reading page only. They do not rewrite Design_System 2.3, which stays the site wide type system.
 
-| Role | Size | Weight | Line height | Notes |
-|------|------|--------|-------------|-------|
-| Display h1 | `clamp(38px, 5.4vw, 76px)` | 800 | 1.05 | letter spacing `-.03em`, max width 900px |
-| Dek | 21px (20px at 900px and below) | 400 Newsreader, `--mute` | 1.45 | max 34em |
-| Heading h2 | `clamp(28px, 3.4vw, 40px)` | 800 | 1.1 | letter spacing `-.025em`, sentence case |
-| Body (article) | 20.5px (19px at 900px and below) | 400 Newsreader | 1.75 | max measure 680px. Replaces 19.5px and 18px |
-| Pull quote | 34px (27px at 900px and below) | 400 italic Newsreader | 1.25 | same tier as headings |
-| Step and feature title (h3) | 18px | 700 | 1.25 | |
-| UI text, facts value, buttons, step text | 16px | 700 for values and buttons, 400 Newsreader never in UI | 1.4 | |
-| Label, meta, caption, chip, stat label | 14px | 700 for labels, mute colour | 1.4 | Minimum size on this page is 14px. Nothing below it |
-| Script (stage only) | 34px name, 42px signature (28px and 32px at 700px and below) | Caveat 700 | 1.15 | decorative, `aria-hidden` |
+**Weights.** Regular 400 (Newsreader text) and Bold 700 (Bricolage labels, buttons, h3, values). Weights 500 and 600 are removed from this page.
+
+**Waiver W1 (2-weight cap).** Design_System 2.3 locks Bricolage Grotesque 800 for display headings as a brand decision made by the owner. On the reading page, weight 800 is allowed for exactly these named elements: the `h1` title, the `h2` headings set in the Heading and quote role (each story section heading and the `About {company}` heading), and the big stat numbers. Nothing else uses 800. That excludes the drop cap, every `h3`, buttons, labels and values. Every other element is 400 or 700.
+
+| Role | Size | Weight | Line height | Used for |
+|------|------|--------|-------------|----------|
+| 1. Display | `clamp(38px, 5.4vw, 76px)` | 800 for the `h1` (W1). 700 for the drop cap | 1.05 (drop cap 0.85) | `h1` title (letter spacing `-.03em`, max width 900px) and the drop cap letter |
+| 2. Heading and quote | `clamp(28px, 2.4vw, 34px)` (34px at 1440, 28px at 390) | `h2` and stat numbers 800 (W1). Read next title 700. Pull quote and sidebar quote 400 italic Newsreader | 1.15 for Bricolage, 1.3 for quotes | Story section `h2`, `About {company}` `h2`, pull quote, sidebar quote, Read next card title, big stat numbers. Letter spacing `-.025em` on Bricolage only |
+| 3. Body | 20.5px (19px at 900px and below) | 400 Newsreader for text. 700 Bricolage for `h3` and values | 1.75 article paragraphs (measure 680px), 1.45 dek and company summary, 1.25 `h3` and values | Article paragraphs, dek (`--mute`), company summary (`--mute`), step and feature `h3` titles, facts values, related row titles |
+| 4. Label and small text | 14px | 700 Bricolage for labels and UI. 400 Newsreader for descriptions | 1.4 | Kicker, meta, caption, credit, chips, pills, tags, note, cite, facts labels, stat labels, step numerals, pillar labels, buttons, step and feature descriptions, stage quote card (italic). Minimum size on this page. Nothing below it |
+
+**Exempt decorative tier (not counted toward the 4 size cap).** These are `aria-hidden` art, not reading text (section 8.1). Sizes are unchanged from the current design.
+
+| Element | Size | Weight | Why exempt |
+|---------|------|--------|------------|
+| Stage script name | 34px (28px at 700px and below) | Caveat 700 | `aria-hidden`, ornament on the portrait |
+| Stage signature | 42px (32px at 700px and below) | Caveat 700 | `aria-hidden`, ornament on the portrait |
+| Pull quote glyph | 96px | Newsreader 400 | `aria-hidden`, drawn in `--acc2`, never read |
+
+The stage quote card is content (it stays readable), so it is not exempt. It uses the Label and small text role.
+
+**Merges made to reach four roles.** Dek (was 21px) joins Body at 20.5px, a 0.5px change. Pull quote (was 34px and 27px) and sidebar quote (was 24px) join Heading and quote, so the phone pull quote becomes 28px instead of 27px. Related title (was 28px) and stat numbers (was 22px) join Heading and quote. `h3` (was 18px) and UI text (was 16px) are split between Body at 700 (titles, values) and Label at 14px (buttons, descriptions). Section `h2` was `clamp(28px, 3.4vw, 40px)` and is narrowed to `clamp(28px, 2.4vw, 34px)`, which sits inside the Design_System range of 28 to 42px.
+
+**Design_System 2.3 rows not used on this page:** Page title `h1` (directory and listing pages), Card `h3` (21 to 26px), Body 18px and 17px (default text), Meta 13.5px at 500, Category label 13.5px at 700, Button 15px at 700, Nav and chip 15px and 14px at 600. Rows used: Display `h1` (capped at 76px), Section `h2` (narrowed range), Article body, Deck (merged into Body), Pull quote (28px on phones). Buttons use 14px at 700 here, a 1px step down from the system button size, to hold the 4 role cap and the 14px floor.
 
 Rules:
-- Drop cap on the first paragraph of the first `section` block only (Design_System 2.3). Newsreader 800 is not used for it; use Bricolage 800, 4 lines tall, `--acc`. CSS only: `.fj-body > .fj-sec:first-child > p:first-of-type::first-letter`. If the first block is not a section, there is no drop cap.
-- Headings in sentence case. `hero-tag` uppercase micro label stays (Design_System allows tiny labels) at 14px, letter spacing `.09em`.
+- Drop cap on the first paragraph of the first `section` block only (Design_System 2.3). It uses the Display role size, Bricolage 700 (not 800, which W1 does not cover), `float: left`, line height 0.85, `--acc`, spanning about 2 lines on desktop. CSS only: `.fj-body > .fj-sec:first-child > p:first-of-type::first-letter`. If the first block is not a section, there is no drop cap.
+- Headings in sentence case. The `h2` elements `At a glance`, `Share this story`, `Topics` and `Keep reading` stay `h2` in the outline but are styled in the Label and small text role (14px 700, `--mute`), so they are not covered by W1. `hero-tag` uppercase micro label stays (Design_System allows tiny labels) at 14px, letter spacing `.09em`.
 - Devanagari runs get `lang="hi"` (see section 8).
 
 ### 4.3 Color
@@ -437,7 +450,7 @@ All values are tokens. No hex in components. Values below are for reference only
 | Tone families | `--tone-{gold,green,teal,indigo}-{line,soft,ink}` | Steps, pillars, features only. Content picks the tone |
 | Destructive | none | No destructive actions on this page |
 
-Accent reserved for (explicit): kicker label, drop cap, link hover colour, active chapter marker (B and C), `--acc2` on focus ring, progress bar and quote glyph. Not for body text, not for stat numbers (see contrast below), not for every link.
+Accent reserved for (explicit): kicker label, drop cap, meta-row avatar fill (initials in `--bg`), link hover colour, active chapter marker (B and C), `--acc2` on focus ring, progress bar and quote glyph. Not for body text, not for stat numbers (see contrast below), not for every link.
 
 Rules:
 - Text placed on an `--acc` fill uses `var(--bg)`, never `#fff`. White on dark `--acc` (`#9c9bf2`) is 2.50:1 and fails. `--bg` on `--acc` is 6.08:1 light and 7.65:1 dark.
@@ -569,7 +582,7 @@ Rules: one `h1`. `h2` for facts, each story section, About, Keep reading. `h3` f
 
 **Actions row.** Pin button (min height 40px) then share group. Share circles are 40px. Hover lift 2px (Design_System 5.2) only under `@media (hover: hover)`.
 
-**Facts strip.** `<dl>` with `div` cells. Top rule 2px `--ink`, hairline between cells (`--line`). Desktop: `grid-template-columns: repeat(auto-fit, minmax(176px, 1fr))`. Mobile: 2 columns, website cell spans both. Label 14px 700 `--mute`, value 16px 700 `--ink`. Website is a link with an `↗` and `rel="noopener noreferrer"`, `target="_blank"`, accessible name `Visit {host}, opens in a new tab`.
+**Facts strip.** `<dl>` with `div` cells. Top rule 2px `--ink`, hairline between cells (`--line`). Desktop: `grid-template-columns: repeat(auto-fit, minmax(176px, 1fr))`. Mobile: 2 columns, website cell spans both. Label 14px 700 `--mute`, value in the Body role (20.5px, 19px at 900px and below) 700 `--ink`. Website is a link with an `↗` and `rel="noopener noreferrer"`, `target="_blank"`, accessible name `Visit {host}, opens in a new tab`.
 
 **Body.** One CSS grid: `grid-template-columns: minmax(0,1fr) min(680px,100%) minmax(0,1fr)`. Default block lives in column 2. Tiers:
 - `fj-col` (680px): section, note.
@@ -577,11 +590,11 @@ Rules: one `h1`. `h2` for facts, each story section, About, Keep reading. `h3` f
 - `fj-wide` (1100px): figure.
 At 900px and below every tier is full column width; figures run edge to edge (negative margin equal to the 16px page padding).
 
-**Pull quote.** `--soft` surface, radius `4px 60px 4px 4px`, padding 32px 40px (24px at 900px and below), no border, no shadow. A decorative open quote glyph (`aria-hidden`, Newsreader 96px, `--acc2`) at top left. Text is `--ink` italic Newsreader 34px / 27px. `cite` 14px 700 `--mute` preceded by a 24px `--ink` rule. Never in a left-border style.
+**Pull quote.** `--soft` surface, radius `4px 60px 4px 4px`, padding 32px 48px (24px at 900px and below), no border, no shadow. A decorative open quote glyph (`aria-hidden`, Newsreader 96px, `--acc2`, exempt decorative tier in 4.2) at top left. Text is `--ink` italic Newsreader in the Heading and quote role (34px desktop, 28px at 900px and below). `cite` 14px 700 `--mute` preceded by a 24px `--ink` rule. Never in a left-border style.
 
 **Figure.** `<figure>` radius `4px 4px 4px 80px`, 1px `--line` border, `--soft` fallback surface, no shadow, no hover lift. Caption 14px `--mute` below, outside the clipped box. Credit appended as today.
 
-**Steps.** `<ol class="fj-steps">` with `<li>` cards and a decorative connector drawn by CSS (no arrow DOM nodes). Card: `--card` surface, 1px `--line`, radius 4px, tone top edge 4px using `--t-line`, icon tile 40px using `--t-soft` and `--t-ink`, `h3` 18px, text 16px `--mute`. At 840px: 2 to 5 columns equal width. At 900px and below: one column with a vertical connector. Numerals `1` to `n` in 14px 700 `--mute` above the icon.
+**Steps.** `<ol class="fj-steps">` with `<li>` cards and a decorative connector drawn by CSS (no arrow DOM nodes). Card: `--card` surface, 1px `--line`, radius 4px, tone top edge 4px using `--t-line`, icon tile 40px using `--t-soft` and `--t-ink`, `h3` in the Body role (20.5px, 19px at 900px and below) at 700, text 14px 400 `--mute`. At 840px: 2 to 5 columns equal width. At 900px and below: one column with a vertical connector. Numerals `1` to `n` in 14px 700 `--mute` above the icon.
 
 **Pillars.** `<ul>` band, `--card`, 1px `--line`, radius `4px 4px 60px 4px`. Icons 32px. Labels 14px 700 `--ink` (not `--t-ink`). Auto-fit `minmax(120px, 1fr)`.
 
@@ -590,11 +603,11 @@ At 900px and below every tier is full column width; figures run edge to edge (ne
 **Note.** 14px 700 `--mute` on `--soft`, radius 4px, padding 16px.
 
 **End wrap (replaces the sidebar).**
-- Company panel: `--card`, 1px `--line`, radius `4px 4px 4px 90px`, padding 32px. Left: logo or icon tile, `h2` name, summary 16px, `Visit website` primary button (pill, `--ink` fill, `--bg` text, min height 44px) plus copy-link icon button 40px. Right: stats `<dl>` 3 columns of number (22px 800 `--ink`) over label 14px `--mute`; features 2 x 2 using tone icons, title 16px 700, text 14px `--mute`. If both stats and features are absent the panel is single column.
-- Sidebar quote: `--soft`, radius `4px 60px 4px 4px`, text 24px italic Newsreader, cite 14px.
+- Company panel: `--card`, 1px `--line`, radius `4px 4px 4px 90px`, padding 32px. Left: logo or icon tile, `h2` name (Heading and quote role), summary in the Body role (`--mute`), `Visit website` primary button (pill, `--ink` fill, `--bg` text, 14px 700, min height 48px) plus copy-link icon button 40px. Right: stats `<dl>` 3 columns of number (Heading and quote role, 800 under waiver W1, `--ink`) over label 14px `--mute`; features 2 x 2 using tone icons, title in the Body role at 700, text 14px 400 `--mute`. If both stats and features are absent the panel is single column.
+- Sidebar quote: `--soft`, radius `4px 60px 4px 4px`, text in the Heading and quote role (italic Newsreader), cite 14px.
 - Share this story: share group (5 buttons) and the Pin button.
 - Topics: `ul` of non-interactive tags. Style: 14px 700, `--soft` fill, radius 4px (not pill), no border, no hover, no `cursor: pointer`. This keeps them visually different from interactive pill chips (Design_System 5.3).
-- Keep reading: first related story as a Read next card (3:2 thumb with radius `50% 4px 4px 4px` is for side thumbnails, so use `4px 4px 90px 4px` on the large thumb instead), kicker, 28px title, meta. Remaining related stories as rows with hairlines. Row hover shifts padding-left 12px over 0.3s under `hover: hover` (Design_System 4.3). `Sample` label replaces the kicker for sample stories (existing behaviour).
+- Keep reading: first related story as a Read next card (3:2 thumb with radius `50% 4px 4px 4px` is for side thumbnails, so use `4px 4px 90px 4px` on the large thumb instead), kicker, title in the Heading and quote role at 700, meta at 14px. Remaining related stories as rows with hairlines and titles in the Body role at 700. Row hover shifts padding-left 12px over 0.3s under `hover: hover` (Design_System 4.3). `Sample` label replaces the kicker for sample stories (existing behaviour).
 
 **ShareDock.** Client component, fixed, z-index 5 (Design_System "tools bar" layer, no new value). See section 9.
 
@@ -641,7 +654,7 @@ Every colour is `var(--token)`. No hex.
 | `fj-sample` | label | pill, existing | `--soft`, `--line`, `--ink` |
 | `fj-hero` | header | grid areas | none |
 | `fj-title`, `fj-w`, `fj-mk` | h1 and word spans | display type, per-word reveal, highlight per word | `--ink`, `--mark` |
-| `fj-dek` | p | 21px Newsreader | `--mute` |
+| `fj-dek` | p | Body role, 20.5px Newsreader | `--mute` |
 | `fj-stage` | panel | radius `4px 4px 90px 4px`, fallback gradient | `--soft`, `--line` |
 | `fj-stage-art`, `fj-stage-img`, `fj-stage-cover` | art wrapper, img, wipe cover | cover is the load wipe layer | `--soft` |
 | `fj-script`, `fj-role`, `fj-sig`, `fj-sq` | stage decorations | as today, restyled | `--ink`, `--mute`, `--card`, `--line`, `--acc2` |
@@ -667,7 +680,7 @@ Every colour is `var(--token)`. No hex.
 | `fj-toast-up` | toast offset modifier on `.mbtoast` | raises toast above dock | none |
 | `fj-t-gold`, `-green`, `-teal`, `-indigo` | tones | existing | tone tokens |
 
-Component-scoped custom properties, declared on `.fj-page`, not global tokens, no colour values, no approval needed: `--fj-hdr: 68px`, `--fj-sticky: calc(var(--fj-hdr) + 20px)`, `--fj-col: 680px`, `--fj-mid: 840px`, `--fj-wide: 1100px`, `--fj-dock-h: 64px` (mobile) and `56px` (desktop pill), and the inline stagger index `--i` set by React on word and card elements. They exist so the sticky offset can change in one place if the header ever starts hiding on scroll (Design_System 3.1 describes this, but `Header.tsx` does not do it today).
+Component-scoped custom properties, declared on `.fj-page`, not global tokens, no colour values, no approval needed: `--fj-hdr: 68px`, `--fj-sticky: calc(var(--fj-hdr) + 20px)`, `--fj-col: 680px`, `--fj-mid: 840px`, `--fj-wide: 1100px`, `--fj-dock-h: 64px` (mobile) and `48px` (desktop pill), and the inline stagger index `--i` set by React on word and card elements. They exist so the sticky offset can change in one place if the header ever starts hiding on scroll (Design_System 3.1 describes this, but `Header.tsx` does not do it today).
 
 New colour tokens needed: none. The stage panel uses `--soft`, the pull quote uses `--soft`, the dock uses `--card`. If implementation finds a gap, stop and ask (Design_System 11).
 
@@ -694,7 +707,7 @@ Hard-coded colour to remove while migrating the founder-story rules: `#fff` on `
 - Tab order equals DOM order. On phones the stage image moves above the dek with CSS grid areas. Only non-focusable content changes visual order, because all focusable controls (pin, share) are last in both orders.
 
 ### 8.3 Targets
-- All interactive elements are at least 40 by 40px (Design_System 4.2): share circles 40, copy 40, pin min height 40, `Visit website` min height 44, dock buttons 44, related rows full row tap targets. WCAG 2.5.8 minimum (24px) is exceeded.
+- All interactive elements are at least 40 by 40px (Design_System 4.2): share circles 40, copy 40, pin min height 40, `Visit website` min height 48, mobile dock buttons 48, desktop pill buttons 40, related rows full row tap targets. WCAG 2.5.8 minimum (24px) is exceeded.
 - Topic tags are not interactive, so they have no target size and no hover.
 
 ### 8.4 Motion and time
@@ -811,8 +824,8 @@ All `fj-rv-pre` rules sit inside `no-preference`, so content is visible by defau
 - Wide blocks (figure, map) run edge to edge using negative margins equal to the page padding. Steps and pillars stack to one column. Pills wrap, 2 per row at 320.
 - Tap targets 40 or more. No hover dependent action.
 - **ShareDock bar on mobile.** Fixed bottom, full width, `--card` background, 1px top `--line`, padding 8px 16px plus `env(safe-area-inset-bottom)`, z-index 5, height 64px.
-  - Left: primary pill `Share on WhatsApp` (WhatsApp mark plus label, 44px high, `--ink` fill, `--bg` text, flexible width).
-  - Right: `More ways to share` icon button (44px, calls `navigator.share({ title, text, url })` where available, which covers LinkedIn, X, Facebook, Instagram and the rest; if unsupported it opens the inline share group by scrolling to the end share group), and `Copy link` icon button (44px).
+  - Left: primary pill `Share on WhatsApp` (WhatsApp mark plus label, 48px high, `--ink` fill, `--bg` text, flexible width).
+  - Right: `More ways to share` icon button (48px, calls `navigator.share({ title, text, url })` where available, which covers LinkedIn, X, Facebook, Instagram and the rest; if unsupported it opens the inline share group by scrolling to the end share group), and `Copy link` icon button (48px).
   - Appears after the stage actions leave the view, hides at the end share group, never overlaps the footer (hidden by the end share trigger before it).
   - The end of the article has bottom padding of 64px plus safe area so the last paragraph is never covered.
 - Share URLs keep campaign tags (REQ-TMP-12). Mediums: `share_top` (stage actions), `share_dock` (dock), `share_end` (end wrap). The old `share_sidebar` is retired.
@@ -837,6 +850,7 @@ Planner and auditor use this list as acceptance criteria.
 11. `npm run build` passes the content guard. `npx tsc --noEmit` passes. `npm run test:e2e` passes with the new checks.
 12. Lighthouse mobile on a throttled connection: LCP under 2.0s, CLS under 0.1, Accessibility 100.
 13. Layout field works: setting `layout` on a journey changes the composition with no slug check in the template.
+14. Type: computed font sizes on the page resolve to only the four roles in 4.2 plus the exempt `aria-hidden` script and glyph. Computed weights are 400 and 700, with 800 only on the `h1`, story and company `h2`, and stat numbers (waiver W1).
 
 ---
 
@@ -849,7 +863,8 @@ Planner and auditor use this list as acceptance criteria.
 | DEC-021 | Founder story layout | Recommended Variant A (Cover story) replaces the sidebar layout from DEC-006. Reason: fixes the facts gap, hidden sticky sidebar and missing end of story, matches Design_System 3.3 and 5.7, same structure on phones. Typography, tokens and copy rules from DEC-006, 012 and 013 are kept |
 | DEC-022 | `layout` field | Optional `layout` on `FounderJourney` (`cover`, `dossier`, `chapters`, default `cover`) delivers REQ-TMP-06 and avoids any `if (slug === ...)` |
 | DEC-023 | Reading page motion | One load moment, progress bar, once-only block reveals, `transform`, `opacity` and `clip-path` only, reduced motion shows everything. Hero wipe uses a cover layer to protect LCP |
-| DEC-024 | Type floor | No text under 14px on the reading page. Body 20.5px and 19px, per Design_System 2.3 |
+| DEC-024 | Type floor and roles | No text under 14px on the reading page. Four size roles only: Display, Heading and quote, Body (20.5px and 19px per Design_System 2.3), Label and small text (14px). Script and quote glyph are an exempt decorative tier (`aria-hidden`). Scoped to this page, Design_System 2.3 is not rewritten |
+| DEC-026 | Weight waiver W1 | Reading page weights are 400 and 700. Weight 800 is a named waiver for the `h1`, the `h2` headings in the Heading and quote role, and big stat numbers only, because Design_System 2.3 locks 800 for display headings as the owner's brand decision |
 | DEC-025 | Focus ring amendment | Add a 1px `--ink` hairline to the 3px `--acc2` ring on reading pages, because `--acc2` is 2.01:1 on `--bg` in light mode. Needs approval |
 
 ### Open risks
