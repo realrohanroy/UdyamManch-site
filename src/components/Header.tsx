@@ -81,7 +81,7 @@ export default function Header() {
           <Link href="/founders" className={pathname.startsWith('/founders') ? 'on' : ''}>
             Founders
           </Link>
-          <Link href="/founders" className="">
+          <Link href="/founders?view=index" className="">
             Directory
           </Link>
           <button
@@ -189,7 +189,7 @@ export default function Header() {
             </svg>
           </Link>
           <Link
-            href="/founders"
+            href="/founders?view=index"
             className="mobile-nav-link"
             onClick={() => setMobileMenuOpen(false)}
           >

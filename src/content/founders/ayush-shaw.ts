@@ -118,12 +118,17 @@ const journey: FounderJourney = {
     'Circular economy',
   ],
   related: ['kishan-panchal-farming-solutions-india'],
+  // Founders page. State confirmed by Rohan on 24 Oct 2026. Swap the metric for a real headline number once verified.
+  listing: {
+    state: 'wb',
+    metric: { value: '2023', label: 'year founded', verified: false },
+  },
 
   seo: {
     title: 'Ayush Shaw: from agricultural waste to clean energy',
     description:
       'How Ayush Shaw is building Shaw Agrivolt Gas, a CBG venture turning agricultural waste into clean energy and organic fertilisers for Indian farmers.',
-    image: '/assets/ayush-shaw/ayush-shaw-og.webp',
+    image: '/assets/ayush-shaw/ayush-shaw-og.jpg',
   },
 };
 

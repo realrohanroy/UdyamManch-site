@@ -120,6 +120,11 @@ const journey: FounderJourney = {
 
   topics: ['Agriculture', 'Protected farming', 'Irrigation', 'Solar pumps', 'Rajasthan'],
   related: ['ayush-shaw-shaw-agrivolt-gas'],
+  // Founders page. The state comes from the city above. Swap the metric for a real headline number and set verified: true once checked.
+  listing: {
+    state: 'rj',
+    metric: { value: '2006', label: 'year founded', verified: false },
+  },
 
   seo: {
     title: "Kishan for Kisan: from Rajasthan's soil to farms across India",

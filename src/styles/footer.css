@@ -1,0 +1,179 @@
+/* ==========================================================================
+   Footer.  Prefix: ft  (Design_System.md section 11)
+   A brand panel with one big rounded end: the left end on desktop, the top
+   (an arch) on tablet and mobile. Colours come only from tokens.css.
+   ========================================================================== */
+
+.ft {
+  margin: 56px 16px 16px;
+  color: var(--foot-ink);
+  font: 500 14.5px/1.5 var(--hd);
+}
+
+.ft-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--foot-bg);
+  /* Pill shaped left end. 999px is clamped by the browser to half the height. */
+  border-radius: 999px 24px 24px 999px;
+  padding: 64px 56px 0 clamp(96px, 12vw, 160px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) auto auto minmax(0, 1.2fr);
+  column-gap: clamp(32px, 4vw, 64px);
+  align-items: start;
+}
+
+.ft-tag {
+  margin: 0 0 12px;
+  font: 800 clamp(20px, 1.9vw, 26px)/1.15 var(--hd);
+  letter-spacing: -.025em;
+}
+
+.ft-copy {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--foot-ink) 82%, transparent);
+}
+
+.ft-h {
+  margin: 0 0 14px;
+  font: 700 13px/1.2 var(--hd);
+  letter-spacing: .06em;
+  text-transform: uppercase; /* tiny label, allowed by Design_System 2.3 */
+}
+
+.ft-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ft-col li + li { margin-top: 10px; }
+
+.ft a {
+  color: color-mix(in srgb, var(--foot-ink) 88%, transparent);
+  text-decoration: none;
+}
+
+.ft-col a:hover,
+.ft-col a:focus-visible {
+  color: var(--foot-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ft a:focus-visible,
+.ft button:focus-visible,
+.ft input:focus-visible {
+  outline: 3px solid var(--acc2);
+  outline-offset: 2px;
+}
+
+/* Newsletter */
+.ft-form {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid color-mix(in srgb, var(--foot-ink) 70%, transparent);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.ft-form input {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  color: var(--foot-ink);
+  font: 500 16px var(--hd); /* 16px keeps iOS from zooming */
+  padding: 10px 14px 10px 16px;
+}
+
+.ft-form input::placeholder { color: color-mix(in srgb, var(--foot-ink) 65%, transparent); }
+
+.ft-form button {
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 20px;
+  background: var(--foot-ink);
+  color: var(--foot-bg);
+  font: 700 15px var(--hd);
+  cursor: pointer;
+  transition: transform .25s;
+}
+
+.ft-form button:hover { transform: translateY(-2px); }
+.ft-form button:active { transform: none; }
+
+.ft-thanks {
+  margin: 0;
+  font: 700 16px var(--hd);
+}
+
+.ft-follow { margin-top: 22px; }
+
+.ft-social {
+  display: flex;
+  gap: 10px;
+}
+
+.ft-social a {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--foot-ink) 16%, transparent);
+  color: var(--foot-ink);
+  transition: background .25s;
+}
+
+.ft-social a:hover { background: color-mix(in srgb, var(--foot-ink) 28%, transparent); }
+.ft-social svg { width: 18px; height: 18px; }
+
+/* Big wordmark, cropped by the bottom edge of the panel */
+.ft-mark {
+  grid-column: 1 / -1;
+  justify-self: end;
+  margin: 28px 0 0;
+  font: 800 clamp(64px, 12.5vw, 170px)/.86 var(--hd);
+  letter-spacing: -.045em;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--foot-ink) 94%, transparent);
+  padding-bottom: .2em; /* room for the y descender */
+  user-select: none;
+}
+
+/* Tablet and mobile: the big curve moves to the top (an arch) */
+@media (max-width: 900px) {
+  .ft { margin: 40px 12px 12px; }
+
+  .ft-panel {
+    border-radius: 999px 999px 24px 24px;
+    padding: clamp(120px, 34vw, 200px) clamp(24px, 6vw, 48px) 0;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+    row-gap: 0;
+  }
+
+  .ft-intro { grid-column: 1 / -1; margin-bottom: 36px; }
+  .ft-col { margin-bottom: 36px; }
+  .ft-news { grid-column: 1 / -1; }
+
+  .ft-mark {
+    justify-self: start;
+    margin-top: 36px;
+    font-size: clamp(72px, 25vw, 190px);
+    line-height: .84;
+    white-space: normal;
+  }
+
+  .ft-mark span { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft-form button,
+  .ft-social a { transition: none; }
+  .ft-form button:hover { transform: none; }
+}

@@ -7,7 +7,8 @@
  * lib/journey/validate.ts, so local content and CMS content follow one set of rules.
  */
 import { defineArrayMember, defineField, defineType, type StringRule } from 'sanity';
-import { ICON_NAMES, TONES } from '../../lib/journey/types';
+import { ICON_NAMES, LAYOUTS, STATE_CODES, TONES } from '../../lib/journey/types';
+import { STATE_NAMES } from '../../lib/journey/states';
 
 const noEmDash = (v: string | undefined) => (v && /\u2014/.test(v) ? 'Avoid em dashes. Use a comma, colon or full stop.' : true);
 const text = (name: string, title: string, opts: { required?: boolean; rows?: number; max?: number; description?: string } = {}) =>
@@ -254,7 +255,51 @@ export const founderJourneyType = defineType({
       ],
     }),
     defineField({ name: 'topics', title: 'Topics', type: 'array', group: 'sidebar', of: [{ type: 'string' }], options: { layout: 'tags' } }),
+    defineField({
+      name: 'layout',
+      title: 'Reading page layout',
+      type: 'string',
+      group: 'publish',
+      options: { list: LAYOUTS.map((l) => ({ value: l, title: { cover: 'Cover story (default)', dossier: 'Dossier (profile rail)', chapters: 'Chapters (long stories)' }[l] })) },
+      initialValue: 'cover',
+      description: 'Changes how the story is laid out. The content stays the same.',
+    }),
     defineField({ name: 'related', title: 'Related journeys', type: 'array', group: 'sidebar', of: [{ type: 'reference', to: [{ type: 'founderJourney' }] }], validation: (r) => r.max(3) }),
+    defineField({
+      name: 'listing',
+      title: 'Founders page listing',
+      description: 'Leave empty to keep this journey off the Founders page and map.',
+      type: 'object',
+      group: 'sidebar',
+      fields: [
+        defineField({
+          name: 'state', title: 'State or union territory', type: 'string',
+          options: { list: STATE_CODES.map((c) => ({ value: c, title: STATE_NAMES[c] })) },
+          validation: (r) => r.required(),
+        }),
+        defineField({
+          name: 'metric', title: 'Headline number', type: 'object',
+          description: 'One number for the card, for example 10,000 and "farmers trained".',
+          fields: [
+            defineField({ name: 'value', type: 'string', validation: (r) => r.required().max(12) }),
+            defineField({ name: 'label', type: 'string', validation: (r) => r.required().max(40) }),
+            defineField({ name: 'verified', title: 'Verified by our team', type: 'boolean', initialValue: false }),
+          ],
+        }),
+        defineField({
+          name: 'placement', title: 'Placement', type: 'string',
+          options: { list: [
+            { value: 'editors-pick', title: "Editor's pick (free)" },
+            { value: 'sponsored', title: 'Sponsored (paid, always labelled)' },
+          ] },
+        }),
+        defineField({
+          name: 'placementUntil', title: 'Placement ends', type: 'datetime',
+          hidden: ({ parent }) => !parent?.placement,
+          validation: (r) => r.custom((v, ctx) => ((ctx.parent as { placement?: string })?.placement === 'sponsored' && !v ? 'Sponsored slots need an end date' : true)),
+        }),
+      ],
+    }),
 
     // ---- Publishing ---------------------------------------------------------
     defineField({

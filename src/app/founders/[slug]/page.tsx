@@ -10,10 +10,7 @@ import { notFound } from 'next/navigation';
 import { getJourney, getJourneys, getRelated } from '@/lib/journey/repo';
 import { plain, readMinutes } from '@/lib/journey/format';
 import { absoluteUrl, SITE_NAME } from '@/lib/site';
-import Breadcrumb from '@/components/journey/Breadcrumb';
-import JourneyHero from '@/components/journey/JourneyHero';
-import JourneyBody from '@/components/journey/blocks';
-import JourneySidebar from '@/components/journey/JourneySidebar';
+import { LAYOUT_COMPONENTS } from '@/components/journey/layouts';
 import '@/styles/journey.css';
 
 type Props = { params: { slug: string } };
@@ -35,7 +32,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = absoluteUrl(`/founders/${j.slug}`);
   const title = j.seo?.title ?? `${j.founder.name}, ${j.company.name}`;
   const description = j.seo?.description ?? plain(j.hero.dek);
-  const image = absoluteUrl(j.seo?.image ?? j.hero.image.url);
+  // Only a hand made share image (seo.image) overrides the generated 1200 x 630 card.
+  const image = j.seo?.image ? absoluteUrl(j.seo.image) : undefined;
 
   return {
     title, // layout template appends " | Udyam Manch"
@@ -52,14 +50,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       modifiedTime: j.updatedAt ?? j.publishedAt,
       authors: [j.author],
       section: 'Founder stories',
-      images: [{ url: image, width: 1200, height: 630, alt: j.hero.image.alt }],
+      ...(image && { images: [{ url: image, width: 1200, height: 630, alt: j.hero.image.alt }] }),
     },
     twitter: {
       card: 'summary_large_image',
       site: '@udyammanch',
       title,
       description,
-      images: [image],
+      ...(image && { images: [image] }),
     },
   };
 }
@@ -77,7 +75,7 @@ export default async function FounderJourneyPage({ params }: Props) {
     '@type': 'NewsArticle',
     headline: plain(j.hero.title),
     description: plain(j.hero.dek),
-    image: [absoluteUrl(j.seo?.image ?? j.hero.image.url)],
+    image: [j.seo?.image ? absoluteUrl(j.seo.image) : absoluteUrl(`/founders/${j.slug}/opengraph-image`)],
     datePublished: j.publishedAt,
     dateModified: j.updatedAt ?? j.publishedAt,
     author: [{ '@type': 'Organization', name: j.author }],
@@ -86,29 +84,17 @@ export default async function FounderJourneyPage({ params }: Props) {
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
   };
 
+  // The journey's own `layout` field picks the composition. No slug checks anywhere.
+  const Layout = LAYOUT_COMPONENTS[j.layout ?? 'cover'];
+
   return (
-    <div className="w">
+    <>
       <script
         type="application/ld+json"
         // JSON.stringify output is data, and "<" is escaped so text cannot close the tag.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\u003c') }}
       />
-
-      <Breadcrumb
-        items={[
-          { label: 'Founders', href: '/founders' },
-          { label: j.founder.shortName ?? j.founder.name },
-        ]}
-      />
-
-      <JourneyHero j={j} minutes={minutes} url={url} />
-
-      <div className="article-layout">
-        <article className="story-content">
-          <JourneyBody blocks={j.body} />
-        </article>
-        <JourneySidebar j={j} related={related} url={url} />
-      </div>
-    </div>
+      <Layout j={j} related={related} url={url} minutes={minutes} />
+    </>
   );
 }

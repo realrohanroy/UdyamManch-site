@@ -1,3 +1,17 @@
+---
+gsd_state_version: "1.0"
+status: unknown
+stopped_at: Phase 02 UI-SPEC approved (variants A, B, C)
+last_updated: "2026-10-24T11:58:26.755Z"
+state_head: 9a53a4f1ab1b3b797113df4fa9a11bc8cd590b14
+progress:
+  total_phases: 5
+  completed_phases: 0
+  total_plans: 5
+  completed_plans: 0
+  percent: 0
+---
+
 # Current Project State: Udyam Manch
 
 **Last Updated**: 2026-10-23
@@ -50,6 +64,12 @@
 | **DEC-013** | 2026-10-23 | Copy Rules over Prototype Copy | Where the Kishan prototype used Title Case headings and em dashes, Design_System 4.4 wins: sentence case and no em dashes. Layout still follows the prototype. Enforced by a build-time content guard (`lib/journey/validate.ts`) and matching Sanity validation. |
 | **DEC-014** | 2026-10-23 | Sanity `founderJourney` Type | Old `founder` schema replaced (no CMS data existed yet). Fields mirror `lib/journey/types.ts`; icon and tone dropdowns read the same constants as the code. Founder and Company stay embedded until Phase 3 makes them separate documents. |
 | **DEC-015** | 2026-10-23 | Sample Content Handling | `sample: true` shows a Sample label, sets `noindex` and excludes the page from the sitemap. Sunita Meena and Arjun Somani are samples. |
+| **DEC-016** | 2026-10-24 | Footer Panel | Footer is a brand panel with one big rounded end (left on desktop, top arch at 900px and below), a big Udyam Manch wordmark and an inline newsletter field. Adds tokens `--foot-bg` and `--foot-ink` (defined in all three theme selectors) and `styles/footer.css` with prefix `ft`. Only links to pages that exist. The footer newsletter, like the home band, does not send the address anywhere yet. |
+| **DEC-017** | 2026-10-24 | Page Curtain | Implements Design_System 8.4. `components/PageCurtain.tsx` holds internal link clicks with one capture-phase document listener, sweeps a curved two layer SVG band (round leading edge, hollowed trailing edge, curve scaled to screen height) in from the left (380ms), calls `router.push`, and sweeps it out to the right (480ms) when `usePathname` changes. Light theme is yellow over sky blue, dark theme is the reverse: blue (`--hl`) with a yellow (`#ffbc1f`) edge, via `--curtain-lead` and `--curtain-main` in `tokens.css`. Skipped for reduced motion, new tab and modified clicks, downloads, hash links, the same page, `/admin` and `/api`. A 4s failsafe lifts the curtain if a route stalls. Prefix `pc`, z-index 100. |
+| **DEC-018** | 2026-10-24 | Founders Page | New `/founders` page (hero with India map, sector marquee, spotlight, wall/index/map views, insights, get featured band). Reads only through `getJourneys()` via `lib/journey/listing.ts`. Journeys opt in with an optional `listing { state, metric, placement, placementUntil }` field, also added to the Sanity schema. Filters live in the URL, so every state link works without JavaScript. Sponsored slots are always labelled, appear only in the Spotlight, rotate daily, need an end date, and never reorder the normal list. Adds token `--spot` and prefix `fd`. Replaces `FoundersDirectory` on this route (component kept, now unused). |
+| **DEC-019** | 2026-10-24 | One Reading Feed | `getFeed()` in `lib/content.ts` merges founder journeys and editorial stories, newest first. `/stories`, home "Latest" and home "From the directory" read it, so a published journey appears everywhere without being copied by hand (Ayush was missing from Stories). Deleted the hand-copied Kishan story, which had invented details; its old URLs still 301 via `next.config.mjs`, so the slug check in `stories/[slug]` is removed. Real dates replace hard-coded ones. Production tests added in `tests/` (`npm run test:e2e`), findings in `docs/TEST_REPORT.md`. |
+| **DEC-020** | 2026-10-24 | Production Hardening | Fixes from `docs/TEST_REPORT.md`. Board storage is validated on read and reconciled against live content (`lib/board.tsx`), with `error.tsx`, `global-error.tsx` and a helpful `not-found.tsx`. Share cards are generated 1200 x 630 PNGs (`lib/og.tsx`, `opengraph-image.tsx` routes) on the edge runtime, because Next 14's Node image generator fails on Windows builds. Newsletter forms no longer claim to subscribe unless `NEXT_PUBLIC_NEWSLETTER_ACTION` is set. Stories gain a `sample` flag. Added `/get-featured`, a lowercase redirect in `src/middleware.ts`, security headers and `SITE_URL` everywhere. Next patched to 14.2.35. Known gap: unknown founder or story addresses draw their 404 in the browser (Next 14 ISR), so JavaScript-off visitors see a blank page. |
+| **DEC-021** | 2026-10-24 | Founder Story Reading Page | Redesigned from `.planning/phases/02-reading-templates/02-UI-SPEC.md`. Three compositions chosen by an optional `layout` field (`cover` default, `dossier`, `chapters`), all rendering the same content through shared parts (hero, facts row, blocks, end of story, share dock). Replaces the sticky sidebar from DEC-006. Reading page type: four size roles, weights 400 and 700, with a named 800 waiver for the h1, h2 headings and stat numbers (DEC-024, DEC-026 in the spec). Motion is CSS plus one small client component, reduced motion shows everything. Pending owner decisions: keep the 1px `--ink` focus hairline (DEC-025), approve 800 on stat numbers, verify founding years, and pick the layout to keep (then delete `/preview` and the unused layouts, and remove about 650 dead lines from `editorial.css`). Global `header` and `nav` element rules in `editorial.css` leak into new components, so new reading-page parts use `div` with a role instead. Audit: `02-UI-REVIEW.md` scored 16/24, its top fixes are applied. |
 
 ---
 
@@ -72,10 +92,15 @@
 3. Define TypeScript schemas for `FounderJourney`, `Story`, `Founder`, `Company`, `Category`, and `Tag`.
 4. Implement initial auth and media upload pipeline.
 
-
 ---
 
 ## Status Corrections (2026-10-23)
 
 - Phases 2 to 4 were marked complete, but several exit criteria are not met yet: the 301 redirect engine for changed slugs (REQ-SEO-02), `/directory` and company pages (REQ-PUB-11, 12), the walkthrough tour and Instagram window from the prototype, and the My board storage key (`um_my_board_v1` in code, `um-board-v1` in Design_System 7).
 - Founder journeys now meet REQ-TMP-01 to 05, 07, 09 to 12 and REQ-SEO-03, 04, 06, 07, 09. See `docs/FOUNDER_JOURNEYS.md`.
+
+## Session
+
+**Last session:** 2026-10-24T11:58:26.690Z
+**Stopped at:** Phase 02 UI-SPEC approved (variants A, B, C)
+**Resume file:** .planning/phases/02-reading-templates/02-UI-SPEC.md

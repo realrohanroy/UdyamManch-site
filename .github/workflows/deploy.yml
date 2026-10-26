@@ -34,6 +34,14 @@ jobs:
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID || 'udyammanch' }}
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET || 'production' }}
 
+      - name: Production tests (links, previews, headers, browser)
+        run: |
+          npx next start -p 3000 &
+          npx wait-on -t 60000 http://localhost:3000 || sleep 15
+          npm run test:e2e
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+
       - name: Deploy to Vercel (Production)
         if: github.ref == 'refs/heads/main' && env.VERCEL_TOKEN != ''
         uses: amondnet/vercel-action@v25

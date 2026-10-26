@@ -10,6 +10,7 @@ import { client } from '@/sanity/client';
 import { LOCAL_JOURNEYS } from '@/content/founders';
 import type { FounderJourney } from './types';
 import { assertJourneys } from './validate';
+import { assertListings } from './validate-listing';
 
 const sanityEnabled = () => {
   const id = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
@@ -33,6 +34,8 @@ const PROJECTION = `{
   },
   sidebar,
   topics,
+  listing{ state, metric, placement, placementUntil },
+  layout,
   "related": related[]->slug.current,
   seo{ title, description, "image": image.asset->url }
 }`;
@@ -50,6 +53,8 @@ function normalize(j: FounderJourney): FounderJourney {
         : undefined,
     },
     sidebar: j.sidebar ?? {},
+    listing: j.listing ?? undefined,
+    layout: j.layout ?? undefined,
     related: (j.related ?? []).filter(Boolean),
   };
 }
@@ -58,6 +63,7 @@ let localChecked = false;
 function local(): FounderJourney[] {
   if (!localChecked) {
     assertJourneys(LOCAL_JOURNEYS); // fail the build on bad seed content
+    assertListings(LOCAL_JOURNEYS);
     localChecked = true;
   }
   return LOCAL_JOURNEYS;

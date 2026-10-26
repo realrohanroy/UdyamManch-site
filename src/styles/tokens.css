@@ -54,6 +54,18 @@
   --tone-indigo-line: var(--acc);
   --tone-indigo-soft: var(--soft);
   --tone-indigo-ink: var(--acc);
+
+  /* Footer panel (brand indigo with light text). Same in both themes on purpose,
+     so the panel reads as a brand block against the dark page. */
+  --foot-bg: var(--indigo);
+  --foot-ink: #fff;
+
+  /* Founders page sponsored surface. Warm in light, deep indigo in dark. */
+  --spot: #fff4c2;
+
+  /* Page curtain (8.4). Light: yellow with a blue edge. Dark: blue with a yellow edge. */
+  --curtain-lead: var(--sky);
+  --curtain-main: var(--hl);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -83,6 +95,11 @@
     --tone-teal-line: #38b2ac;
     --tone-teal-soft: #11302e;
     --tone-teal-ink: #5eead4;
+    --foot-bg: var(--indigo);
+    --foot-ink: #fff;
+    --spot: #2b2a52;
+    --curtain-lead: #ffbc1f; /* dark: yellow edge on blue */
+    --curtain-main: var(--hl); /* dark --hl is blue */
   }
 }
 
@@ -112,4 +129,9 @@
   --tone-teal-line: #38b2ac;
   --tone-teal-soft: #11302e;
   --tone-teal-ink: #5eead4;
+  --foot-bg: var(--indigo);
+  --foot-ink: #fff;
+  --spot: #2b2a52;
+  --curtain-lead: #ffbc1f; /* dark: yellow edge on blue */
+  --curtain-main: var(--hl); /* dark --hl is blue */
 }

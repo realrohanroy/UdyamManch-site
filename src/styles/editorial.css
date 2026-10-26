@@ -350,7 +350,7 @@ nav a.on, nav a:hover {
 
 .trend {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0;
   border-top: 2px solid var(--ink);
   border-bottom: 1px solid var(--line);
@@ -361,6 +361,7 @@ nav a.on, nav a:hover {
   padding: 16px 18px 16px 0;
   display: flex;
   gap: 12px;
+  min-width: 0;
 }
 
 .trend a + a {
@@ -375,6 +376,16 @@ nav a.on, nav a:hover {
 
 .trend span {
   font: 600 16px/1.25 var(--hd);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.trend span small {
+  display: block;
+  margin-bottom: 2px;
+  font: 700 12px var(--hd);
+  letter-spacing: .04em;
+  color: var(--mute);
 }
 
 .art {
@@ -574,23 +585,7 @@ input, select {
   flex: 1 1 220px;
 }
 
-footer {
-  border-top: 1px solid var(--line);
-  padding: 36px 0 56px;
-  color: var(--mute);
-  font: 500 14.5px/1.6 var(--hd);
-}
-
-footer .w {
-  display: flex;
-  gap: 30px;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-footer .w > div:first-child img {
-  margin-bottom: 6px;
-}
+.news > div { min-width: 0; }
 
 /* Directory Layout */
 .ph {
@@ -1917,7 +1912,7 @@ header.hide ~ main .tools {
 
 @media(max-width:900px) {
   .hero, .two, .news, .prof { grid-template-columns: 1fr; }
-  .trend { grid-template-columns: 1fr 1fr; }
+  .trend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .trend a:nth-child(3) { border-left: 0; padding-left: 0; }
   .pq { margin: 1.6em 0; font-size: 27px; }
   .rel .g { grid-template-columns: 1fr; }
@@ -1928,7 +1923,8 @@ header.hide ~ main .tools {
   .logo { margin-right: auto; flex-shrink: 0; }
   .logo img { height: 38px !important; }
   .nav-actions { gap: 8px; margin-left: auto; }
-  .mbm, #tg, .nav-toggle { width: 38px; height: 38px; flex-shrink: 0; }
+  .mbm, #tg, .nav-toggle { width: 40px; height: 40px; flex-shrink: 0; }
+  .logo { min-height: 40px; display: flex; align-items: center; }
   .mbm { display: grid; }
   .nav-toggle { display: grid; }
   .bar .btn-subscribe-desk { display: none; }
@@ -2087,7 +2083,7 @@ header.hide ~ main .tools {
   .logo { min-width: 0; }
   .logo img { height: 32px !important; max-width: 100%; object-fit: contain; }
   .nav-actions { gap: 5px; }
-  .mbm, #tg, .nav-toggle { width: 34px; height: 34px; }
+  .mbm, #tg, .nav-toggle { width: 40px; height: 40px; }
   .pbs3, .pbs4b { grid-column: span 12; }
 }
 

@@ -49,6 +49,10 @@ export const sunitaMeena: FounderJourney = {
   sidebar: {},
   topics: ['Textiles', 'Handloom', 'Rajasthan'],
   related: ['kishan-panchal-farming-solutions-india'],
+  listing: {
+    state: 'rj', // Barmer
+    metric: { value: '2018', label: 'year founded (sample)', verified: false },
+  },
 };
 
 export const arjunSomani: FounderJourney = {
@@ -88,5 +92,9 @@ export const arjunSomani: FounderJourney = {
   ],
   sidebar: {},
   topics: ['Manufacturing', 'Gujarat'],
+  listing: {
+    state: 'gj', // Rajkot
+    metric: { value: '2014', label: 'year founded (sample)', verified: false },
+  },
   related: ['ayush-shaw-shaw-agrivolt-gas'],
 };

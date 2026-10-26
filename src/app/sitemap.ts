@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
 import { getFounders, getStories } from '@/lib/content';
+import { SITE_URL } from '@/lib/site';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://udyammanch.in';
+  const baseUrl = SITE_URL;
   const [founders, stories] = await Promise.all([getFounders(), getStories()]);
 
   // Sample pages are noindex, so keep them out of the sitemap too.
@@ -13,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  const storyUrls = stories.map((story) => ({
+  const storyUrls = stories.filter((s) => !s.sample).map((story) => ({
     url: `${baseUrl}/stories/${story.slug}`,
     lastModified: new Date(story.publishedAt),
     changeFrequency: 'weekly' as const,

@@ -1,0 +1,26 @@
+/* ==========================================================================
+   Page curtain.  Prefix: pc  (Design_System.md 8.4, z-index 100)
+   Two curved bands (SVG) that sweep left to right across the screen. Motion lives in
+   components/PageCurtain.tsx. Colours come only from tokens.css:
+   light theme sweeps yellow with a blue edge, dark theme sweeps blue with a yellow edge.
+   ========================================================================== */
+
+.pc-lead,
+.pc-main {
+  position: fixed;
+  top: -1px;
+  left: 0;
+  z-index: 100;
+  visibility: hidden; /* shown only while moving */
+  transform: translateX(-200vw); /* parked off screen until JS sizes it */
+  pointer-events: none; /* the click is already held in JS, never block the page */
+  will-change: transform;
+}
+
+.pc-lead path { fill: var(--curtain-lead); }
+.pc-main path { fill: var(--curtain-main); }
+
+/* No curtain at all when motion is reduced: content must never wait on an animation. */
+@media (prefers-reduced-motion: reduce) {
+  .pc { display: none; }
+}

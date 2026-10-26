@@ -23,6 +23,13 @@ export const storyType = defineType({
       description: 'Permanent URL /stories/[slug].',
     }),
     defineField({
+      name: 'sample',
+      title: 'Sample content',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Shows a Sample label and hides the page from search engines.',
+    }),
+    defineField({
       name: 'excerpt',
       title: 'Standfirst / Excerpt',
       type: 'text',

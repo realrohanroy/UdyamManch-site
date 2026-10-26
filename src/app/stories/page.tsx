@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getStories } from '@/lib/content';
+import { getFeed } from '@/lib/content';
 
 export const metadata: Metadata = {
   title: 'Stories',
@@ -9,13 +9,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Stories | Udyam Manch',
     description: 'Startup stories, founder journeys, case studies and business news.',
+    images: ['/opengraph-image'],
   },
 };
 
 export const revalidate = 300;
 
 export default async function StoriesDirectoryPage() {
-  const stories = await getStories();
+  const stories = await getFeed();
 
   return (
     <div className="w">
@@ -25,12 +26,11 @@ export default async function StoriesDirectoryPage() {
       </div>
 
       <div className="feed" style={{ marginBottom: 60 }}>
-        {stories.map((s, idx) => {
-          const destination = s.founderSlug ? `/founders/${s.founderSlug}` : `/stories/${s.slug}`;
+        {stories.map((s) => {
           return (
             <Link
-              key={idx}
-              href={destination}
+              key={s.href}
+              href={s.href}
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'minmax(120px, 240px) 1fr',
@@ -69,8 +69,11 @@ export default async function StoriesDirectoryPage() {
               </span>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 4 }}>
-                  <span className="cat">{s.category}</span>
-                  {s.founderSlug && (
+                  <span className="cat">
+                    {s.category}
+                    {s.sample && <b> · Sample</b>}
+                  </span>
+                  {s.kind === 'journey' && (
                     <span
                       style={{
                         font: '700 11.5px var(--hd)',
@@ -79,7 +82,7 @@ export default async function StoriesDirectoryPage() {
                         letterSpacing: '0.06em',
                       }}
                     >
-                      • Founder Story ↗
+                      Founder journey
                     </span>
                   )}
                 </div>
@@ -90,7 +93,8 @@ export default async function StoriesDirectoryPage() {
                   {s.excerpt}
                 </p>
                 <span className="meta">
-                  {s.author}, 15 Oct 2026, {s.readingTimeMinutes} min read
+                  {s.sample && <b>Sample. </b>}
+                  {s.author}, {s.date}, {s.readingTimeMinutes} min read
                 </span>
               </div>
             </Link>

@@ -1,14 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useNewsletter } from '@/lib/useNewsletter';
 
 export default function NewsletterBand() {
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
+  const { formProps, message } = useNewsletter();
 
   return (
     <section className="news" id="nl">
@@ -18,16 +14,19 @@ export default function NewsletterBand() {
           One email a week with the best founder story, three companies worth knowing and the business news that mattered. No spam, unsubscribe any time.
         </p>
       </div>
-      {submitted ? (
-        <b style={{ font: '700 18px var(--hd)', color: 'var(--ink)' }}>Thanks. Check your inbox to confirm.</b>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <input type="email" required placeholder="you@company.com" aria-label="Email address" />
+      <div>
+        <form {...formProps}>
+          <input type="email" name="email" required placeholder="you@company.com" aria-label="Email address" autoComplete="email" />
           <button type="submit" className="btn">
             Subscribe
           </button>
         </form>
-      )}
+        {message && (
+          <p role="status" style={{ font: '700 16px/1.4 var(--hd)', color: 'var(--ink)', margin: '12px 0 0' }}>
+            {message}
+          </p>
+        )}
+      </div>
     </section>
   );
 }

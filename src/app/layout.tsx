@@ -2,10 +2,15 @@ import type { Metadata } from 'next';
 import { Bricolage_Grotesque, Newsreader, Caveat } from 'next/font/google';
 import '@/styles/tokens.css';
 import '@/styles/editorial.css';
+import '@/styles/footer.css';
+import '@/styles/curtain.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MyBoardDrawer from '@/components/MyBoardDrawer';
+import PageCurtain from '@/components/PageCurtain';
 import { BoardProvider } from '@/lib/board';
+import { getLiveContent } from '@/lib/content';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -31,7 +36,9 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://udyammanch.in'),
+  metadataBase: new URL(SITE_URL),
+  // './' means every page's own address. Pages with a special case (journeys) set their own.
+  alternates: { canonical: './' },
   title: {
     default: 'Udyam Manch (उद्यम मंच): The Indian Builder Archive',
     template: '%s | Udyam Manch',
@@ -55,16 +62,9 @@ export const metadata: Metadata = {
     title: 'Udyam Manch (उद्यम मंच): The Indian Builder Archive',
     description:
       'Chronicling grassroots commercial resilience, soil-level engineering, and non-metro founders across India.',
-    url: 'https://udyammanch.in',
-    siteName: 'Udyam Manch',
-    images: [
-      {
-        url: '/assets/kishan-panchal/double-portrait-yellow-halo.webp',
-        width: 1200,
-        height: 630,
-        alt: 'Udyam Manch Editorial Magazine Cover',
-      },
-    ],
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    // No images here on purpose: app/opengraph-image.tsx makes the 1200 x 630 card.
     locale: 'en_IN',
     type: 'website',
   },
@@ -73,7 +73,6 @@ export const metadata: Metadata = {
     title: 'Udyam Manch (उद्यम मंच): The Indian Builder Archive',
     description: 'Documenting real commercial builders across India.',
     creator: '@udyammanch',
-    images: ['/assets/kishan-panchal/double-portrait-yellow-halo.webp'],
   },
   robots: {
     index: true,
@@ -88,7 +87,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -98,15 +97,17 @@ export default function RootLayout({
     '@type': 'Periodical',
     name: 'Udyam Manch',
     alternateName: 'उद्यम मंच',
-    url: 'https://udyammanch.in',
+    url: SITE_URL,
     description:
       'Independent editorial magazine chronicling Indian grassroots founders and industrial innovation.',
     publisher: {
       '@type': 'Organization',
       name: 'Udyam Manch',
-      url: 'https://udyammanch.in',
+      url: SITE_URL,
     },
   };
+
+  const live = await getLiveContent();
 
   return (
     <html lang="en" className={`${bricolage.variable} ${newsreader.variable} ${caveat.variable}`}>
@@ -122,11 +123,12 @@ export default function RootLayout({
         />
       </head>
       <body className="editorial-grain">
-        <BoardProvider>
+        <BoardProvider live={live}>
           <Header />
           <main style={{ flex: 1 }}>{children}</main>
           <Footer />
           <MyBoardDrawer />
+          <PageCurtain />
         </BoardProvider>
       </body>
     </html>

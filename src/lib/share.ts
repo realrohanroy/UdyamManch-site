@@ -2,7 +2,7 @@
  * Share URLs with campaign tags.  [REQ-TMP-10] [REQ-TMP-12]
  * One function so every share bar on the site tracks channels the same way.
  */
-export type ShareChannel = 'whatsapp' | 'linkedin' | 'x' | 'facebook' | 'copy_link';
+export type ShareChannel = 'whatsapp' | 'linkedin' | 'x' | 'facebook' | 'copy_link' | 'native';
 
 export function tagged(url: string, channel: ShareChannel, medium = 'share_bar'): string {
   const u = new URL(url);

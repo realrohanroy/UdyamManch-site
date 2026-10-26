@@ -37,6 +37,9 @@ export interface ImageRef {
   alt: string;
   caption?: string;
   credit?: string;
+  /** Pixel size, when known. Lets the page reserve space so nothing jumps while the image loads. */
+  width?: number;
+  height?: number;
 }
 
 export type JourneyBlock =
@@ -71,6 +74,42 @@ export interface Feature {
   text: string;
   icon: IconName;
   tone: Tone;
+}
+
+/**
+ * Indian states and union territories, as drawn on the Founders map.
+ * An array (not just a type) so the Sanity dropdown is built from the same list.
+ */
+export const STATE_CODES = [
+  'an', 'ap', 'ar', 'as', 'br', 'ch', 'ct', 'dn', 'dd', 'dl', 'ga', 'gj', 'hr', 'hp', 'jk', 'jh', 'ka', 'kl', 'ld', 'mp', 'mh', 'mn', 'ml', 'mz', 'nl', 'or', 'py', 'pb', 'rj', 'sk', 'tn', 'tg', 'tr', 'up', 'ut', 'wb',
+] as const;
+export type StateCode = (typeof STATE_CODES)[number];
+
+/**
+ * Reading page compositions. Same content, different structure:
+ *   cover    title first, facts row, one centred column, end of story wrap (default)
+ *   dossier  two columns with a short sticky profile rail and chapter list
+ *   chapters full-width hero band, numbered chapters, docked story bar
+ * An editor picks one per journey, so the template never needs `if (slug === ...)`.
+ */
+export const LAYOUTS = ['cover', 'dossier', 'chapters'] as const;
+export type Layout = (typeof LAYOUTS)[number];
+
+export type Placement = 'editors-pick' | 'sponsored';
+
+/**
+ * Facts for the Founders page (listing and map). Optional: a journey without
+ * `listing` is simply not shown there. Sector, city and founding year come from
+ * `company`, so nothing is entered twice.
+ */
+export interface Listing {
+  state: StateCode;
+  /** One headline number for the card, e.g. "10,000" and "farmers trained". */
+  metric?: { value: string; label: string; verified: boolean };
+  /** Paid slots are ALWAYS labelled "Sponsored" on the page (Design_System 6.x). */
+  placement?: Placement;
+  /** ISO date. A sponsored slot must have one; after it the slot lapses. */
+  placementUntil?: string;
 }
 
 export interface FounderJourney {
@@ -123,6 +162,12 @@ export interface FounderJourney {
     features?: Feature[];
     quote?: { text: string; cite: string };
   };
+
+  /** Founders page facts. Leave out to keep a journey off the Founders page. */
+  listing?: Listing;
+
+  /** Reading page composition. Defaults to 'cover'. [REQ-TMP-06] */
+  layout?: Layout;
 
   /** Tags shown as topic chips. */
   topics?: string[];

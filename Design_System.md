@@ -326,7 +326,8 @@ My board is the visitor's personal pinboard. It needs no account and is saved in
 
 - Pin keys must be stable identifiers. In the prototype they look like `s:ID`, `c:ID` and `t:cat:Name`. After the move to a CMS they must use slugs, so that renaming a story does not break pins.
 - Items that become unpublished are removed from the board quietly.
-- Storage key: `um-board-v1`. Change the version suffix if the stored shape changes.
+- Storage key: `um_my_board_v1` (the key the site really uses, so existing visitors keep their pins). Change the version suffix if the stored shape changes, and write a migration first.
+- Storage is never trusted: every entry is validated on read, and pins for unpublished items are dropped and renamed ones refreshed (`cleanPins`, `reconcilePins` in `lib/board.tsx`).
 - Shared links must validate every item against known content. Never insert unchecked text into the page.
 
 ## 8. Overlays and floating elements
@@ -383,8 +384,8 @@ My board is the visitor's personal pinboard. It needs no account and is saved in
 ## 11. Naming and code conventions
 
 - Tokens are CSS variables named as in section 2. New tokens need approval.
-- Class prefixes keep components from clashing: `pb` for editors' pinboard, `mb` for My board, `ig` for the Instagram window, `t` for walkthrough parts. `fj` for founder journey parts (`src/styles/journey.css`). A new component picks a short unique prefix and documents it here.
-- Script state uses clearly versioned storage keys: `um-board-v1`, `um-tour-v2`, `um-ig` (session). Add new keys to this list.
+- Class prefixes keep components from clashing: `pb` for editors' pinboard, `mb` for My board, `ig` for the Instagram window, `t` for walkthrough parts. `fj` for founder journey parts (`src/styles/journey.css`). `fd` for the Founders page (`src/styles/founders.css`). `ft` for the footer, `pc` for the page curtain. A new component picks a short unique prefix and documents it here.
+- Script state uses clearly versioned storage keys: `um_my_board_v1`, `um-theme`, `um-tour-v2`, `um-ig` (session). Add new keys to this list.
 - When the site moves to Next.js or Astro, tokens should become a single theme file, and components should accept props rather than copying markup.
 - Never use inline hex colours that already exist as tokens. Never use `!important` except to override inline styles that cannot be removed.
 - No new heavy dependencies without approval. Prefer native browser features.

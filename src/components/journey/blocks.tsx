@@ -4,26 +4,33 @@ import { Inline } from './inline';
 import { Icon } from './icons';
 
 /**
- * One component per block type. The `never` check at the bottom makes the
- * build fail if someone adds a block type to the model and forgets to render it.
+ * One component per block type. The `never` check at the bottom makes the build fail if
+ * someone adds a block type to the model and forgets to render it.
+ *
+ * Width tiers (fj-col 680, fj-mid 840, fj-wide 1100) are classes, and each layout decides
+ * what they mean, so a block never knows which layout it is in. `data-rv` marks a block
+ * for the once-only scroll reveal (JourneyFx).
  */
-function Block({ b }: { b: JourneyBlock }) {
+const idx = (i: number): React.CSSProperties => ({ '--i': i }) as React.CSSProperties;
+
+export function Block({ b }: { b: JourneyBlock }) {
   switch (b._type) {
     case 'section':
       return (
-        <div>
-          {b.heading && <h2>{b.heading}</h2>}
+        <section className="fj-sec fj-col" id={`ch-${b._key}`} aria-labelledby={b.heading ? `h-${b._key}` : undefined} data-rv>
+          {b.heading && <h2 id={`h-${b._key}`}>{b.heading}</h2>}
           {b.paragraphs.map((p, i) => (
             <p key={i}>
               <Inline text={p} />
             </p>
           ))}
-        </div>
+        </section>
       );
 
     case 'quote':
       return (
-        <blockquote className="pq">
+        <blockquote className="fj-quote fj-mid" data-rv>
+          <span className="fj-qg" aria-hidden="true">“</span>
           <p>{b.text}</p>
           {b.cite && <cite>{b.cite}</cite>}
         </blockquote>
@@ -31,10 +38,12 @@ function Block({ b }: { b: JourneyBlock }) {
 
     case 'figure':
       return (
-        <figure className="field-banner-wrap">
-          <img src={b.image.url} alt={b.image.alt} loading="lazy" />
+        <figure className="fj-figure fj-wide" data-rv>
+          <div className="fj-fig" style={b.image.width && b.image.height ? ({ '--ar': `${b.image.width} / ${b.image.height}` } as React.CSSProperties) : undefined}>
+            <img src={b.image.url} alt={b.image.alt} width={b.image.width} height={b.image.height} loading="lazy" />
+          </div>
           {(b.image.caption || b.image.credit) && (
-            <figcaption className="cap fj-cap">
+            <figcaption className="fj-cap">
               {b.image.caption}
               {b.image.credit && <span className="fj-credit"> Photo: {b.image.credit}</span>}
             </figcaption>
@@ -44,31 +53,25 @@ function Block({ b }: { b: JourneyBlock }) {
 
     case 'steps':
       return (
-        <div className="fj-steps" role="list" aria-label={b.label}>
+        <ol className="fj-steps fj-mid" aria-label={b.label} style={{ '--n': b.steps.length } as React.CSSProperties} data-rv>
           {b.steps.map((s, i) => (
-            <React.Fragment key={s._key}>
-              {i > 0 && (
-                <div className="stepper-arrow" aria-hidden="true">
-                  →
-                </div>
-              )}
-              <div className={`stepper-card fj-t-${s.tone}`} role="listitem">
-                <div className="st-icon">
-                  <Icon name={s.icon} />
-                </div>
-                <h4>{s.title}</h4>
-                <p>{s.text}</p>
-              </div>
-            </React.Fragment>
+            <li key={s._key} className={`fj-step fj-t-${s.tone}`} style={idx(i)}>
+              <span className="fj-step-n" aria-hidden="true">{i + 1}</span>
+              <span className="fj-ic">
+                <Icon name={s.icon} size={20} />
+              </span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
           ))}
-        </div>
+        </ol>
       );
 
     case 'pillars':
       return (
-        <ul className="fj-pillars" aria-label={b.label}>
-          {b.items.map((it) => (
-            <li key={it._key} className={`fj-t-${it.tone}`}>
+        <ul className="fj-pillars fj-mid" aria-label={b.label} data-rv>
+          {b.items.map((it, i) => (
+            <li key={it._key} className={`fj-t-${it.tone}`} style={idx(i)}>
               <span className="fj-ic">
                 <Icon name={it.icon} size={28} strokeWidth={1.8} />
               </span>
@@ -80,15 +83,17 @@ function Block({ b }: { b: JourneyBlock }) {
 
     case 'regions':
       return (
-        <div className="expansion-container">
+        <div className="fj-regions fj-mid" data-rv>
           {b.map && (
-            <div className="expansion-map-fig">
-              <img src={b.map.url} alt={b.map.alt} loading="lazy" />
-            </div>
+            <figure className="fj-figure">
+              <div className="fj-fig">
+                <img src={b.map.url} alt={b.map.alt} width={b.map.width} height={b.map.height} loading="lazy" />
+              </div>
+            </figure>
           )}
-          <ul className="expansion-states-wrap fj-plain-list" aria-label={b.label}>
-            {b.regions.map((r) => (
-              <li key={r} className="state-pill">
+          <ul className="fj-pills" aria-label={b.label}>
+            {b.regions.map((r, i) => (
+              <li key={r} className="fj-pill" style={idx(Math.min(i, 12))}>
                 {r}
               </li>
             ))}
@@ -98,7 +103,7 @@ function Block({ b }: { b: JourneyBlock }) {
 
     case 'note':
       return (
-        <p className="note">
+        <p className="fj-note fj-col" data-rv>
           <Inline text={b.text} />
         </p>
       );
@@ -112,10 +117,10 @@ function Block({ b }: { b: JourneyBlock }) {
 
 export default function JourneyBody({ blocks }: { blocks: JourneyBlock[] }) {
   return (
-    <>
+    <div className="fj-body">
       {blocks.map((b) => (
         <Block key={b._key} b={b} />
       ))}
-    </>
+    </div>
   );
 }

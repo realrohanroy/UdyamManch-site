@@ -1,8 +1,10 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { getStoryBySlug, getStories } from '@/lib/content';
+import { formatDate } from '@/lib/journey/format';
+import { absoluteUrl, SITE_NAME } from '@/lib/site';
 
 interface StoryPageProps {
   params: {
@@ -21,49 +23,23 @@ export async function generateMetadata({ params }: StoryPageProps): Promise<Meta
   const story = await getStoryBySlug(params.slug);
   if (!story) return {};
 
-  const ogUrl = `https://udyammanch.in/stories/${story.slug}`;
-  const ogImageUrl = story.seo?.ogImage || story.coverImage.url;
+  const url = absoluteUrl(`/stories/${story.slug}`);
+  const title = story.seo?.ogTitle?.replace(/\s*\|\s*Udyam Manch$/, '') || story.title;
+  const description = story.seo?.ogDescription || story.excerpt;
 
   return {
-    title: story.title,
-    description: story.seo?.ogDescription || story.excerpt,
-    alternates: {
-      canonical: ogUrl,
-    },
-    openGraph: {
-      title: `${story.title} | Udyam Manch`,
-      description: story.seo?.ogDescription || story.excerpt,
-      url: ogUrl,
-      type: 'article',
-      publishedTime: story.publishedAt,
-      images: [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: story.coverImage.alt || story.title,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: story.title,
-      description: story.seo?.ogDescription || story.excerpt,
-      images: [ogImageUrl],
-    },
+    title,
+    description,
+    alternates: { canonical: url },
+    robots: story.sample ? { index: false, follow: true } : undefined,
+    // No images set: app/stories/[slug]/opengraph-image.tsx makes the 1200 x 630 card.
+    openGraph: { title, description, url, type: 'article', siteName: SITE_NAME, publishedTime: story.publishedAt },
+    twitter: { card: 'summary_large_image', title, description },
   };
 }
 
 export default async function StoryDetailPage({ params }: StoryPageProps) {
-  if (
-    params.slug === 'the-field-is-the-real-business-school' ||
-    params.slug === 'kishan-panchal-farming-solutions-india' ||
-    params.slug === 'kishan-for-kisan' ||
-    params.slug === '8'
-  ) {
-    redirect('/founders/kishan-panchal-farming-solutions-india');
-  }
-
+  // Old slugs of founder stories are 301 redirected in next.config.mjs, before this runs.
   const story = await getStoryBySlug(params.slug);
 
   if (!story || story.status !== 'published') {
@@ -77,12 +53,15 @@ export default async function StoryDetailPage({ params }: StoryPageProps) {
     <article>
       {/* Header */}
       <div className="art-h">
-        <span className="cat">{story.category}</span>
+        <span className="cat">
+          {story.category}
+          {story.sample && <b> · Sample</b>}
+        </span>
         <h1>{story.title}</h1>
         <p className="dek">{story.excerpt}</p>
         <div className="by">
           <span className="meta">
-            {story.author} · 15 Oct 2026 · {story.readingTimeMinutes} min read
+            {story.author}, {formatDate(story.publishedAt)}, {story.readingTimeMinutes} min read
           </span>
         </div>
       </div>
