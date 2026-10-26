@@ -21,28 +21,30 @@ export default function FounderMap({ counts, names, selected, hrefs }: Props) {
   const wrap = useRef<HTMLDivElement>(null);
   const svg = useRef<SVGSVGElement>(null);
   const [tip, setTip] = useState<{ code: StateCode; x: number; y: number } | null>(null);
-  const [rings, setRings] = useState<{ x: number; y: number }[]>([]);
   const [done, setDone] = useState(false);
 
   const max = Math.max(1, ...STATE_CODES.map((c) => counts[c] ?? 0));
   const level = (n: number) => (n ? Math.min(4, Math.ceil((n / max) * 4)) : 0);
 
+  // Let the states finish dropping in, then switch the entrance animation off.
   useEffect(() => {
-    const top = STATE_CODES.filter((c) => counts[c]).sort((a, b) => (counts[b] ?? 0) - (counts[a] ?? 0)).slice(0, 3);
-    const pts: { x: number; y: number }[] = [];
-    for (const c of top) {
-      const el = svg.current?.querySelector<SVGPathElement>(`[data-id="${c}"]`);
-      if (!el) continue;
-      const b = el.getBBox();
-      pts.push({ x: b.x + b.width / 2, y: b.y + b.height / 2 });
-    }
-    setRings(pts);
     const t = window.setTimeout(() => setDone(true), 2600);
     return () => window.clearTimeout(t);
   }, [counts]);
 
   // The hovered state is drawn last so its lift is never covered by a neighbour.
   const order = tip ? [...STATE_CODES.filter((c) => c !== tip.code), tip.code] : [...STATE_CODES];
+
+  // Keyboard and screen reader users get the same name card, placed beside the focused state.
+  const showAt = (code: StateCode, el: Element) => {
+    const box = wrap.current?.getBoundingClientRect();
+    if (!box) return;
+    const r = el.getBoundingClientRect();
+    let x = r.right - box.left + 12;
+    if (x > box.width - 220) x = r.left - box.left - 220;
+    const y = Math.min(Math.max(8, r.top - box.top), box.height - 150);
+    setTip({ code, x: Math.max(8, x), y });
+  };
 
   const onMove = (e: React.MouseEvent) => {
     const code = (e.target as Element).closest<SVGElement>('[data-id]')?.dataset.id as StateCode | undefined;
@@ -69,6 +71,8 @@ export default function FounderMap({ counts, names, selected, hrefs }: Props) {
                 key={c}
                 href={hrefs[c]}
                 aria-label={`${STATE_NAMES[c]}, ${k} ${k === 1 ? 'founder' : 'founders'}${selected === c ? ', selected' : ''}`}
+                onFocus={(e) => showAt(c, e.currentTarget.querySelector('path') ?? e.currentTarget)}
+                onBlur={() => setTip(null)}
                 onClick={(e) => {
                   e.preventDefault();
                   router.push(hrefs[c], { scroll: false });
@@ -85,11 +89,6 @@ export default function FounderMap({ counts, names, selected, hrefs }: Props) {
               </a>
             );
           })}
-        </g>
-        <g aria-hidden="true">
-          {rings.map((r, i) => (
-            <circle key={i} className="fd-ring" cx={r.x} cy={r.y} r={16} style={{ animationDelay: `${i * 0.7}s` }} />
-          ))}
         </g>
       </svg>
       <div className={`fd-tip${tip ? ' on' : ''}`} style={tip ? { left: tip.x, top: tip.y } : undefined} aria-hidden="true">

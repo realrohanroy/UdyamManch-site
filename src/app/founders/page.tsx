@@ -53,7 +53,6 @@ export default async function FoundersPage({ searchParams }: { searchParams: Pro
     STATE_CODES.map((c) => [c, href({ state: state === c ? undefined : c, page: undefined })]),
   ) as Record<StateCode, string>;
 
-  const words = ['Real', 'people.', 'Real', 'businesses.', 'Real', 'impact.'];
   const sectorMax = sum.sectors[0]?.[1] ?? 1;
   const yearMax = Math.max(1, ...sum.years.map(([, n]) => n));
   const pct = (n: number, of: number) => `${Math.round((n / of) * 100)}%`;
@@ -74,27 +73,32 @@ export default async function FoundersPage({ searchParams }: { searchParams: Pro
           <p className="fd-crumb"><Link href="/">Home</Link> / Founders</p>
           <p className="fd-eyebrow">THE FOUNDERS INDEX</p>
           <h1 className="fd-h1">
-            {words.map((w, k) => (
-              <span key={k}>
-                {k > 3 ? <mark className="fd-mark"><span className="fd-wd"><i style={{ '--k': k } as CSSProperties}>{w}</i></span></mark>
-                  : <span className="fd-wd"><i style={{ '--k': k } as CSSProperties}>{w}</i></span>}{' '}
+            {/* Three sentences, one per line, so the headline breaks the same way at every width */}
+            {[['Real', 'people.'], ['Real', 'businesses.'], ['Real', 'impact.']].map((line, row) => (
+              <span key={row} className="fd-ln">
+                {line.map((w, c) => {
+                  const k = row * 2 + c;
+                  const word = <span className="fd-wd"><i style={{ '--k': k } as CSSProperties}>{w}</i></span>;
+                  return <span key={c}>{row === 2 ? <mark className="fd-mark">{word}</mark> : word}{' '}</span>;
+                })}
               </span>
             ))}
           </h1>
-          <p className="fd-dek">Discover the journeys of Indian founders who are building, solving and creating opportunities across Bharat. Hover the map to see who is where.</p>
+          <p className="fd-dek">Discover the journeys of Indian founders who are building, solving and creating opportunities across Bharat. Choose a state on the map to see who is there.</p>
           <div className="fd-stats">
             <a className="fd-stat" href="#wall"><b data-count={sum.total}>{sum.total}</b><span>Founders</span><small>Browse all</small></a>
             <a className="fd-stat" href="#insights"><b data-count={sum.sectors.length}>{sum.sectors.length}</b><span>Sectors</span><small>See the bars</small></a>
             <a className="fd-stat" href="#map"><b data-count={sum.stateCount}>{sum.stateCount}</b><span>States</span><small>Explore the map</small></a>
           </div>
         </div>
-        <div className="fd-mapcard" id="map">
-          <div className="fd-mh">
+        <div className="fd-stage" id="map">
+          <div className="fd-dots" aria-hidden="true" />
+          <div className="fd-mapcap">
             <h2>Founders by state</h2>
             {state && <Link className="fd-selchip" href={href({ state: undefined })} scroll={false}>{STATE_NAMES[state]} <span aria-label="Clear state">&times;</span></Link>}
           </div>
           <FounderMap counts={sum.states} names={sum.namesByState} selected={state} hrefs={stateHrefs} />
-          <div className="fd-leg">Fewer <i data-l="1" /><i data-l="2" /><i data-l="3" /><i data-l="4" /> More founders. Click a state to filter the list.</div>
+          <div className="fd-leg">Fewer <i data-l="1" /><i data-l="2" /><i data-l="3" /><i data-l="4" /> More founders. Choose a state to filter the list.</div>
         </div>
       </section>
 
