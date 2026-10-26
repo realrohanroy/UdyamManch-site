@@ -54,6 +54,9 @@ html:has(.fj-page) { scroll-padding-top: 88px; scroll-padding-bottom: 80px; }
   color: var(--mute);
 }
 
+/* The breadcrumb home icon (shared Breadcrumb component) */
+.fj-crumb-home { display: inline-block; vertical-align: -2px; }
+
 /* Breadcrumb comes from editorial.css: lift it to the 14px floor and a 40px target */
 .fj-page .breadcrumb { font-size: var(--fj-label); }
 .fj-page .breadcrumb a { display: inline-flex; align-items: center; min-height: 40px; }

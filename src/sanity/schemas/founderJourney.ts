@@ -7,7 +7,7 @@
  * lib/journey/validate.ts, so local content and CMS content follow one set of rules.
  */
 import { defineArrayMember, defineField, defineType, type StringRule } from 'sanity';
-import { ICON_NAMES, LAYOUTS, STATE_CODES, TONES } from '../../lib/journey/types';
+import { ICON_NAMES, STATE_CODES, TONES } from '../../lib/journey/types';
 import { STATE_NAMES } from '../../lib/journey/states';
 
 const noEmDash = (v: string | undefined) => (v && /\u2014/.test(v) ? 'Avoid em dashes. Use a comma, colon or full stop.' : true);
@@ -255,15 +255,6 @@ export const founderJourneyType = defineType({
       ],
     }),
     defineField({ name: 'topics', title: 'Topics', type: 'array', group: 'sidebar', of: [{ type: 'string' }], options: { layout: 'tags' } }),
-    defineField({
-      name: 'layout',
-      title: 'Reading page layout',
-      type: 'string',
-      group: 'publish',
-      options: { list: LAYOUTS.map((l) => ({ value: l, title: { cover: 'Cover story (default)', dossier: 'Dossier (profile rail)', chapters: 'Chapters (long stories)' }[l] })) },
-      initialValue: 'cover',
-      description: 'Changes how the story is laid out. The content stays the same.',
-    }),
     defineField({ name: 'related', title: 'Related journeys', type: 'array', group: 'sidebar', of: [{ type: 'reference', to: [{ type: 'founderJourney' }] }], validation: (r) => r.max(3) }),
     defineField({
       name: 'listing',

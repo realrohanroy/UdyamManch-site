@@ -10,8 +10,8 @@ import { notFound } from 'next/navigation';
 import { getJourney, getJourneys, getRelated } from '@/lib/journey/repo';
 import { plain, readMinutes } from '@/lib/journey/format';
 import { absoluteUrl, SITE_NAME } from '@/lib/site';
-import { LAYOUT_COMPONENTS } from '@/components/journey/layouts';
-import '@/styles/journey.css';
+import LegacyLayout from '@/components/journey/legacy/LegacyLayout';
+import '@/styles/legacy-journey.css';
 
 type Props = { params: { slug: string } };
 
@@ -84,9 +84,6 @@ export default async function FounderJourneyPage({ params }: Props) {
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
   };
 
-  // The journey's own `layout` field picks the composition. No slug checks anywhere.
-  const Layout = LAYOUT_COMPONENTS[j.layout ?? 'cover'];
-
   return (
     <>
       <script
@@ -94,7 +91,7 @@ export default async function FounderJourneyPage({ params }: Props) {
         // JSON.stringify output is data, and "<" is escaped so text cannot close the tag.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\u003c') }}
       />
-      <Layout j={j} related={related} url={url} minutes={minutes} />
+      <LegacyLayout j={j} related={related} url={url} minutes={minutes} />
     </>
   );
 }
