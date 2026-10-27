@@ -5,7 +5,6 @@ import type { FounderJourney } from '@/lib/journey/types';
  *
  * TODO when the founder sends a photo: save it in public/assets/karthik-r/, then change
  * hero.image.url and hero.image.alt below. The illustration is a stand-in.
- * TODO: add company.founded once the founding year is confirmed (it was not in the answers).
  */
 const journey: FounderJourney = {
   slug: 'karthik-r-aurumcrypto',
@@ -23,6 +22,7 @@ const journey: FounderJourney = {
     icon: 'chart',
     industry: 'Fintech',
     city: 'Bangalore',
+    founded: '2025', // the company was incorporated in 2025 (from Rohan, 27 Oct 2026)
   },
 
   hero: {
@@ -52,7 +52,7 @@ const journey: FounderJourney = {
       heading: 'A fintech founder with a simple mission',
       paragraphs: [
         'Karthik R is the founder of AurumCrypto.io, a fintech entrepreneur and crypto strategist based in Bangalore. His background is in finance, technology and AI-driven systems.',
-        'He started AurumCrypto with one mission: to make crypto investing simple, secure and intelligent for everyone, not just for traders.',
+        'He started AurumCrypto, which was incorporated in 2025, with one mission: to make crypto investing simple, secure and intelligent for everyone, not just for traders.',
       ],
     },
     {
