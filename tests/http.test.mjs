@@ -12,6 +12,7 @@ import assert from 'node:assert/strict';
 import { BASE, get, follow, meta, canonical, jsonLd, internalLinks, images, textOf, imageInfo } from './lib/http.mjs';
 
 const JOURNEYS = [
+  { slug: 'karthik-r-aurumcrypto', name: 'Karthik R', sample: false },
   { slug: 'ayush-shaw-shaw-agrivolt-gas', name: 'Ayush Shaw', sample: false },
   { slug: 'kishan-panchal-farming-solutions-india', name: 'Kishan Panchal', sample: false },
   { slug: 'sunita-meena-desert-loom-crafts', name: 'Sunita Meena', sample: true },
@@ -93,8 +94,13 @@ describe('A. Routes, links and redirects', () => {
         if (img.alt === null) problems.push(`missing alt: ${img.src} on ${p}`);
         if (!img.src || img.src.startsWith('data:') || seen.has(img.src)) continue;
         seen.add(img.src);
-        const r = await fetch(new URL(img.src, BASE), { method: 'HEAD' });
-        if (!r.ok) problems.push(`${r.status}: ${img.src} on ${p}`);
+        try {
+          const r = await fetch(new URL(img.src, BASE), { method: 'HEAD', signal: AbortSignal.timeout(15000) });
+          if (!r.ok) problems.push(`${r.status}: ${img.src} on ${p}`);
+        } catch (err) {
+          // An outside host (Unsplash) being slow or unreachable is not our bug. Our own images must always load.
+          if (new URL(img.src, BASE).origin === new URL(BASE).origin) problems.push(`unreachable: ${img.src} on ${p}`);
+        }
       }
     }
     assert.deepEqual(problems, []);
@@ -149,7 +155,7 @@ describe('B. Founders page under hostile or odd query strings', () => {
   });
 
   test('B3 a state filter with no founders shows an empty state, not a blank page', async () => {
-    const r = await get('/founders?state=ka');
+    const r = await get('/founders?state=kl');
     assert.match(textOf(r.body), /no founders|nothing here|no results|0 founders|Showing 0/i);
   });
 

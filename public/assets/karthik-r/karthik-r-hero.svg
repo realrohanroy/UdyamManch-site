@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720" width="900" height="720">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFE08A"/>
+      <stop offset="0.55" stop-color="#F5B82E"/>
+      <stop offset="1" stop-color="#D98E04"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6D6FC4"/>
+      <stop offset="1" stop-color="#3B3F9E"/>
+    </linearGradient>
+  </defs>
+  <!-- sun behind the coin -->
+  <circle cx="470" cy="330" r="270" fill="url(#gold)" opacity="0.28"/>
+  <circle cx="470" cy="330" r="200" fill="url(#gold)" opacity="0.35"/>
+  <!-- rising bars -->
+  <g fill="url(#ink)">
+    <rect x="600" y="470" width="52" height="150" rx="6"/>
+    <rect x="668" y="410" width="52" height="210" rx="6"/>
+    <rect x="736" y="330" width="52" height="290" rx="6"/>
+  </g>
+  <!-- trend line over the bars -->
+  <polyline points="590,455 660,395 730,330 800,235" fill="none" stroke="#F5B82E" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="800" cy="235" r="16" fill="#F5B82E"/>
+  <!-- the coin -->
+  <circle cx="370" cy="360" r="190" fill="url(#gold)"/>
+  <circle cx="370" cy="360" r="190" fill="none" stroke="#B87500" stroke-width="6" opacity="0.5"/>
+  <circle cx="370" cy="360" r="150" fill="none" stroke="#FFF3C4" stroke-width="8" opacity="0.8"/>
+  <text x="370" y="408" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="150" fill="#7A4B00">Au</text>
+  <!-- shield with a check, for security -->
+  <g transform="translate(430 470)">
+    <path d="M110 0 L210 36 V130 C210 200 160 246 110 270 C60 246 10 200 10 130 V36 Z" fill="#3B3F9E"/>
+    <path d="M110 22 L192 52 V130 C192 188 150 228 110 248 C70 228 28 188 28 130 V52 Z" fill="none" stroke="#9C9BF2" stroke-width="5" opacity="0.7"/>
+    <polyline points="62,134 98,170 164,98" fill="none" stroke="#FFE08A" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- small network dots -->
+  <g fill="#5455A5" opacity="0.65">
+    <circle cx="120" cy="150" r="10"/><circle cx="210" cy="90" r="7"/><circle cx="90" cy="250" r="6"/>
+    <circle cx="700" cy="110" r="9"/><circle cx="780" cy="160" r="6"/>
+  </g>
+  <g stroke="#5455A5" stroke-width="3" opacity="0.4">
+    <line x1="120" y1="150" x2="210" y2="90"/><line x1="120" y1="150" x2="90" y2="250"/>
+    <line x1="700" y1="110" x2="780" y2="160"/>
+  </g>
+</svg>
