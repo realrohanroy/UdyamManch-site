@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useBoard } from '@/lib/board';
+import MagneticDots from './MagneticDots';
 
 export default function PinboardHero() {
   const { pinnedItems, togglePin, isPinned } = useBoard();
@@ -32,6 +33,7 @@ export default function PinboardHero() {
 
   return (
     <section className="phero" aria-label="Pinboard hero">
+      <MagneticDots />
       {/* Title & Intro */}
       <div className="pi">
         <h1>

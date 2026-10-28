@@ -1,0 +1,12 @@
+/* Canvas for components/MagneticDots.tsx. Shared by every dot grid that uses
+   it (home hero, Founders hero). The host element must be positioned and
+   form a stacking context so z-index -1 keeps the canvas behind its content
+   but above its background. */
+.mdots {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}

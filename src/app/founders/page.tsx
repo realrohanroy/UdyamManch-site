@@ -5,6 +5,7 @@ import '@/styles/founders.css';
 import FounderCardView from '@/components/founders/FounderCardView';
 import FounderMap from '@/components/founders/FounderMap';
 import FoundersFx from '@/components/founders/FoundersFx';
+import MagneticDots from '@/components/MagneticDots';
 import { getFounderCards, initials, queryFounders, summarize } from '@/lib/journey/listing';
 import { STATE_NAMES } from '@/lib/journey/states';
 import { STATE_CODES, type StateCode } from '@/lib/journey/types';
@@ -92,7 +93,7 @@ export default async function FoundersPage({ searchParams }: { searchParams: Pro
           </div>
         </div>
         <div className="fd-stage" id="map">
-          <div className="fd-dots" aria-hidden="true" />
+          <div className="fd-dots" aria-hidden="true"><MagneticDots size={1.6} /></div>
           <div className="fd-mapcap">
             <h2>Founders by state</h2>
             {state && <Link className="fd-selchip" href={href({ state: undefined })} scroll={false}>{STATE_NAMES[state]} <span aria-label="Clear state">&times;</span></Link>}

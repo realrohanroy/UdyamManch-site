@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Bricolage_Grotesque, Newsreader, Caveat } from 'next/font/google';
 import '@/styles/tokens.css';
 import '@/styles/editorial.css';
+import '@/styles/magnetic-dots.css';
 import '@/styles/footer.css';
 import '@/styles/curtain.css';
 import Header from '@/components/Header';

@@ -29,6 +29,7 @@
   /* Pinboard (2.2) */
   --board: #E9ECF6;
   --dot: #C9CEE3;
+  --dot-active: var(--indigo); /* magnetic dots near the cursor */
   --paper: #FFFFFF;
   --hl: #FFE36E;
   --mbt: #FFE36E;
@@ -80,6 +81,7 @@
     --soft: #1d1c3c;
     --board: #0C0D22;
     --dot: #23264D;
+    --dot-active: var(--acc2);
     --paper: #171A3A;
     --hl: #3B3F9E;
     --mbt: #3B3F9E;
@@ -114,6 +116,7 @@
   --soft: #1d1c3c;
   --board: #0C0D22;
   --dot: #23264D;
+  --dot-active: var(--acc2);
   --paper: #171A3A;
   --hl: #3B3F9E;
   --mbt: #3B3F9E;
