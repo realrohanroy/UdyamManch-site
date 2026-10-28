@@ -3,6 +3,7 @@ import ShareSquareBtn from './LegacyShareSquareBtn';
 import type { FounderJourney } from '@/lib/journey/types';
 import { formatDate, plain, readMinutes } from '@/lib/journey/format';
 import { Icon } from '../icons';
+import { cld } from '@/lib/cloudinary';
 import ShareIcons from './LegacyShareIcons';
 
 interface Props {
@@ -88,7 +89,7 @@ export default function LegacySidebar({ j, related, url }: Props) {
             {related.map((r) => (
               <Link key={r.slug} href={`/founders/${r.slug}`} className="related-card">
                 <div className="related-thumb">
-                  <img src={r.hero.image.url} alt="" loading="lazy" />
+                  <img src={cld(r.hero.image.url, 'c_limit,w_240')} alt="" loading="lazy" />
                 </div>
                 <div>
                   <div className="related-cat">{r.sample ? 'Sample' : r.hero.kicker ?? 'Founder story'}</div>

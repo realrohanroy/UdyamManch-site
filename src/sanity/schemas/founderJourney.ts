@@ -99,6 +99,21 @@ export const founderJourneyType = defineType({
         text('dek', 'Summary', { required: true, rows: 3, description: 'One or two sentences. Used on cards and share previews.' }),
         imageWithAlt('image', 'Portrait'),
         defineField({
+          name: 'portrait',
+          title: 'Portrait type',
+          type: 'string',
+          description: 'Cut-out: the background is removed and the person floats on the page. Full photo: a normal rectangular photo, shown with rounded corners.',
+          initialValue: 'cutout',
+          options: {
+            list: [
+              { value: 'cutout', title: 'Cut-out' },
+              { value: 'photo', title: 'Full photo' },
+            ],
+            layout: 'radio',
+            direction: 'horizontal',
+          },
+        }),
+        defineField({
           name: 'stage',
           title: 'Portrait decorations (optional)',
           type: 'object',

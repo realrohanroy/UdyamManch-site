@@ -146,6 +146,12 @@ export interface FounderJourney {
     title: string;
     dek: string;
     image: ImageRef;
+    /**
+     * 'cutout' (default): a portrait with a transparent background that floats
+     * on the page. 'photo': a full rectangular photo, shown framed, with the
+     * handwritten name on the page above it so it reads in both themes.
+     */
+    portrait?: 'cutout' | 'photo';
     /** Optional decorations on the portrait, from the Kishan prototype. */
     stage?: {
       scriptName?: string; // handwritten name, "\n" allowed

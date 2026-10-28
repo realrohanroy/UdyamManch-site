@@ -1,6 +1,7 @@
 import PinButton from '@/components/PinButton';
 import type { FounderJourney } from '@/lib/journey/types';
 import { formatDate, plain } from '@/lib/journey/format';
+import { cld, cldSrcSet } from '@/lib/cloudinary';
 import { Inline } from '../inline';
 import ShareIcons from './LegacyShareIcons';
 
@@ -55,9 +56,14 @@ export default function LegacyHero({ j, minutes, url }: Props) {
         </div>
       </div>
 
-      <div className="hero-stage">
+      <div className={hero.portrait === 'photo' ? 'hero-stage hero-stage--photo' : 'hero-stage'}>
+        {/* The portrait shows at most 630px wide (.hero-double-portrait). */}
         <img
-          src={hero.image.url}
+          src={cld(hero.image.url, 'c_limit,w_1260')}
+          srcSet={cldSrcSet(hero.image.url, [480, 640, 960, 1260])}
+          sizes="(max-width: 900px) 92vw, 630px"
+          width={hero.image.width}
+          height={hero.image.height}
           alt={hero.image.alt}
           className="hero-double-portrait"
           fetchPriority="high"

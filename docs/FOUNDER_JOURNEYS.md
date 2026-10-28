@@ -34,8 +34,12 @@ every founder's page.
 2. Change `slug`. It becomes `/founders/<slug>` forever, so pick it carefully:
    lowercase words joined by hyphens, usually `founder-name-company-name`.
 3. Fill `founder`, `company`, `hero`, `body`, `sidebar`, `topics`, `related`, `seo`.
-4. Put images in `public/assets/<slug>/`, or use a CDN URL. Every image needs
-   `alt` text. The share image must be 1200 x 630.
+4. Upload photos to Cloudinary and paste the plain delivery URL (see
+   "Images" in the README). Small SVG illustrations can live in
+   `public/assets/<slug>/`. Every image needs `alt` text, and `width` and
+   `height` when you know them. Set `hero.portrait: 'photo'` for a normal
+   rectangular photo; leave it out for a cut-out with a transparent
+   background. The share image (`seo.image`) must be 1200 x 630.
 5. Add the import to `src/content/founders/index.ts`.
 6. Run `npm run build`. The content guard (`lib/journey/validate.ts`) fails the
    build with a clear message if you missed alt text, reused a block `_key`,

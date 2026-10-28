@@ -3,10 +3,11 @@ import type { FounderJourney } from '@/lib/journey/types';
 /**
  * Rohit Gour, Animation Cult. Written from the founder's own answers.
  *
- * TODO when the founder sends a photo: save it in public/assets/rohit-gour/, then change
- * hero.image.url and hero.image.alt below. The illustration is a stand-in.
+ * Photo: the founder's portrait, hosted on Cloudinary (received 28 Oct 2026). The hero
+ * adds resizing and AVIF/WebP itself (lib/cloudinary.ts), so the URL here is the upload.
  * TODO when we know the founding year: add company.founded (the Founders page shows it).
  */
+const PHOTO = 'https://res.cloudinary.com/nkhny4aq/image/upload/v1793187424/Cinematic_Portrait_in_Warm_Studio_Light.png';
 const journey: FounderJourney = {
   slug: 'rohit-gour-animation-cult',
   status: 'published',
@@ -30,9 +31,12 @@ const journey: FounderJourney = {
     dek:
       'Rohit Gour started **Animation Cult** in Bhopal to create jobs in his city, with a plan for three in four of its people to be women.',
     image: {
-      url: '/assets/rohit-gour/rohit-gour-hero.svg',
-      alt: 'Illustration of three storyboard frames with a ball bouncing across them, a pencil and a play button, representing an animation studio',
+      url: PHOTO,
+      alt: 'Rohit Gour, founder of Animation Cult, in a dark jacket, looking to one side in a warmly lit studio with framed artwork behind him',
+      width: 1536,
+      height: 1024,
     },
+    portrait: 'photo',
     stage: {
       scriptName: 'Rohit Gour',
       role: 'Founder, Animation Cult',
@@ -167,6 +171,8 @@ const journey: FounderJourney = {
 
   seo: {
     title: 'Rohit Gour: an animation studio built around women and local jobs',
+    // 1200 x 630 crop centred on his face, as JPEG because LinkedIn is unreliable with WebP.
+    image: 'https://res.cloudinary.com/nkhny4aq/image/upload/c_fill,g_face,w_1200,h_630/f_jpg,q_auto/v1793187424/Cinematic_Portrait_in_Warm_Studio_Light.png',
     description:
       'How Rohit Gour started Animation Cult in Bhopal to create jobs in his city, with a plan for 75% of the studio to be women working safely from home.',
   },

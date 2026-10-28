@@ -3,9 +3,10 @@ import type { FounderJourney } from '@/lib/journey/types';
 /**
  * Karthik R, AurumCrypto. Written from the founder's own answers.
  *
- * TODO when the founder sends a photo: save it in public/assets/karthik-r/, then change
- * hero.image.url and hero.image.alt below. The illustration is a stand-in.
+ * Photo: the founder's portrait, hosted on Cloudinary (received 28 Oct 2026). The hero
+ * adds resizing and AVIF/WebP itself (lib/cloudinary.ts), so the URL here is the upload.
  */
+const PHOTO = 'https://res.cloudinary.com/nkhny4aq/image/upload/v1793186538/Editorial_Portrait_with_Geometric_Accents.png';
 const journey: FounderJourney = {
   slug: 'karthik-r-aurumcrypto',
   status: 'published',
@@ -30,9 +31,12 @@ const journey: FounderJourney = {
     dek:
       'How Karthik R built **AurumCrypto**, an AI-driven crypto asset management ecosystem, to close the gap between institutional tools and everyday investors.',
     image: {
-      url: '/assets/karthik-r/karthik-r-hero.svg',
-      alt: 'Illustration of a golden coin marked Au, a rising bar chart and a security shield, representing AurumCrypto',
+      url: PHOTO,
+      alt: 'Karthik R, founder of AurumCrypto, in a brown blazer, seated in front of a cream wall with navy and gold shapes',
+      width: 1536,
+      height: 1024,
     },
+    portrait: 'photo',
     stage: {
       scriptName: 'Karthik R',
       role: 'Founder, AurumCrypto',
@@ -233,6 +237,8 @@ const journey: FounderJourney = {
 
   seo: {
     title: 'Karthik R: making crypto investing simple, secure and intelligent',
+    // 1200 x 630 crop centred on his face, as JPEG because LinkedIn is unreliable with WebP.
+    image: 'https://res.cloudinary.com/nkhny4aq/image/upload/c_fill,g_face,w_1200,h_630/f_jpg,q_auto/v1793186538/Editorial_Portrait_with_Geometric_Accents.png',
     description:
       'How Karthik R built AurumCrypto, an AI-driven crypto asset management ecosystem in Bangalore with automated trading, a secure wallet and an investor academy.',
   },

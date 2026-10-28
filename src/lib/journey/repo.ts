@@ -25,7 +25,7 @@ const PROJECTION = `{
   "slug": slug.current, status, sample, publishedAt, "updatedAt": _updatedAt, author,
   founder,
   company{ name, summary, website, icon, industry, city, founded, ${img('logo')} },
-  hero{ kicker, title, dek, ${img('image')},
+  hero{ kicker, title, dek, ${img('image')}, portrait,
         stage{ scriptName, role, quote, "signature": [signatureLine1, signatureLine2] } },
   body[]{
     ...,
@@ -48,6 +48,7 @@ function normalize(j: FounderJourney): FounderJourney {
     body: (j.body ?? []).filter(Boolean),
     hero: {
       ...j.hero,
+      portrait: j.hero.portrait ?? undefined,
       stage: j.hero.stage
         ? { ...j.hero.stage, signature: sig && sig.length === 2 ? (sig as [string, string]) : undefined }
         : undefined,

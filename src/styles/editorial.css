@@ -1335,6 +1335,41 @@ header.hide ~ main .tools {
   transform: scale(1.02);
 }
 
+/* Full rectangular photos (hero.portrait = 'photo'). A cut-out floats on the
+   page; a photo has its own background, so it is framed instead, and the
+   handwritten name moves onto the page above it. That keeps the name readable
+   in light and dark, whatever colours the photo has. */
+.hero-stage--photo {
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 630px;
+  margin-inline: auto;
+  padding-top: 76px;
+}
+
+.hero-stage--photo .hero-double-portrait {
+  max-width: none;
+  border-radius: 18px;
+  filter: none;
+  box-shadow: var(--shadow);
+}
+
+.hero-stage--photo:hover .hero-double-portrait {
+  transform: scale(1.01);
+}
+
+.hero-stage--photo .stage-label-founder {
+  top: 0;
+  left: 2px;
+}
+
+/* The quote card overlaps the photo's top corner, like a note pinned to it. */
+.hero-stage--photo .stage-quote-card {
+  top: 50px;
+  right: -14px;
+}
+
 .stage-label-founder {
   position: absolute;
   top: 10%;
@@ -1911,6 +1946,8 @@ header.hide ~ main .tools {
   .article-layout { grid-template-columns: 1fr; gap: 40px; }
   .sidebar { position: static; }
   .stage-quote-card { right: 10px; }
+  /* Stay inside the page gutter, and sit higher so the card clears the face. */
+  .hero-stage--photo .stage-quote-card { top: 22px; right: 0; }
 }
 
 @media(max-width:900px) {
