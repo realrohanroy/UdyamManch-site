@@ -12,6 +12,7 @@ import assert from 'node:assert/strict';
 import { BASE, get, follow, meta, canonical, jsonLd, internalLinks, images, textOf, imageInfo } from './lib/http.mjs';
 
 const JOURNEYS = [
+  { slug: 'rohit-gour-animation-cult', name: 'Rohit Gour', sample: false },
   { slug: 'karthik-r-aurumcrypto', name: 'Karthik R', sample: false },
   { slug: 'ayush-shaw-shaw-agrivolt-gas', name: 'Ayush Shaw', sample: false },
   { slug: 'kishan-panchal-farming-solutions-india', name: 'Kishan Panchal', sample: false },

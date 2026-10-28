@@ -7,6 +7,7 @@ import type { FounderJourney } from '@/lib/journey/types';
 import ayushShaw from './ayush-shaw';
 import kishanPanchal from './kishan-panchal';
 import karthikR from './karthik-r';
+import rohitGour from './rohit-gour';
 import { sunitaMeena, arjunSomani } from './samples';
 
-export const LOCAL_JOURNEYS: FounderJourney[] = [karthikR, ayushShaw, kishanPanchal, sunitaMeena, arjunSomani];
+export const LOCAL_JOURNEYS: FounderJourney[] = [rohitGour, karthikR, ayushShaw, kishanPanchal, sunitaMeena, arjunSomani];
