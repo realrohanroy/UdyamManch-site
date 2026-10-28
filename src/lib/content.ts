@@ -63,7 +63,6 @@ export const SEED_STORIES: Story[] = [
       alt: 'High tech industrial milling machine cutting metal',
       caption: 'Advanced component machining in Tier-2 manufacturing hubs',
     },
-    founderSlug: 'arjun-somani-aarav-hydraulics',
     pullQuote: 'Industrial clusters like Rajkot have 60 years of metallurgy knowledge baked into families. Software cannot replicate that overnight.',
     content: [
       'While venture headlines celebrate consumer internet apps, India’s core capital goods sectors are undergoing an unprecedented technological renaissance.',

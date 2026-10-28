@@ -16,8 +16,6 @@ const JOURNEYS = [
   { slug: 'karthik-r-aurumcrypto', name: 'Karthik R', sample: false },
   { slug: 'ayush-shaw-shaw-agrivolt-gas', name: 'Ayush Shaw', sample: false },
   { slug: 'kishan-panchal-farming-solutions-india', name: 'Kishan Panchal', sample: false },
-  { slug: 'sunita-meena-desert-loom-crafts', name: 'Sunita Meena', sample: true },
-  { slug: 'arjun-somani-aarav-hydraulics', name: 'Arjun Somani', sample: true },
 ];
 const STORY = '/stories/beyond-the-metro-moat-tier-2-manufacturing';
 const PAGES = ['/', '/founders', '/stories', STORY, ...JOURNEYS.map((j) => `/founders/${j.slug}`)];
