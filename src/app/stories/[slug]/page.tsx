@@ -1,4 +1,5 @@
 import React from 'react';
+import { cld, cldSrcSet } from '@/lib/cloudinary';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -69,7 +70,7 @@ export default async function StoryDetailPage({ params }: StoryPageProps) {
       {/* Cover Image */}
       <div className="fig">
         <div className="art">
-          <img src={story.coverImage.url} alt={story.coverImage.alt} />
+          <img src={cld(story.coverImage.url, 'c_limit,w_1400')} srcSet={cldSrcSet(story.coverImage.url, [640, 960, 1400])} sizes="(max-width: 900px) 100vw, 900px" alt={story.coverImage.alt} />
         </div>
       </div>
 
@@ -168,7 +169,7 @@ export default async function StoryDetailPage({ params }: StoryPageProps) {
             {relatedStories.map((s, idx) => (
               <Link key={idx} href={`/stories/${s.slug}`}>
                 <div className="art" style={{ background: 'var(--soft)' }}>
-                  <img src={s.coverImage.url} alt={s.coverImage.alt} />
+                  <img src={cld(s.coverImage.url, 'c_limit,w_480')} alt={s.coverImage.alt} loading="lazy" />
                 </div>
                 <span className="cat">{s.category}</span>
                 <h3>{s.title}</h3>

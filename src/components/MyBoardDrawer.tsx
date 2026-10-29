@@ -1,13 +1,47 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useBoard } from '@/lib/board';
 
 export default function MyBoardDrawer() {
-  const { drawerOpen, setDrawerOpen, pinnedItems, togglePin } = useBoard();
+  const { drawerOpen } = useBoard();
+  return drawerOpen ? <Drawer /> : null;
+}
 
-  if (!drawerOpen) return null;
+/**
+ * The open drawer. A modal dialog: focus moves in when it opens and back to the button
+ * that opened it when it closes, Tab stays inside, Escape closes it, and the page
+ * behind does not scroll.
+ */
+function Drawer() {
+  const { setDrawerOpen, pinnedItems, togglePin } = useBoard();
+  const panel = useRef<HTMLDivElement>(null);
+  const close = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    const body = document.body.style;
+    const overflow = body.overflow;
+    body.overflow = 'hidden';
+    close.current?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDrawerOpen(false);
+      if (e.key !== 'Tab' || !panel.current) return;
+      const items = panel.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      body.overflow = overflow;
+      opener?.focus?.({ preventScroll: true });
+    };
+  }, [setDrawerOpen]);
 
   return (
     <div
@@ -33,6 +67,11 @@ export default function MyBoardDrawer() {
 
       {/* Slide Drawer */}
       <div
+        ref={panel}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mb-title"
+        className="mb-panel"
         style={{
           position: 'relative',
           width: '100%',
@@ -45,7 +84,6 @@ export default function MyBoardDrawer() {
           flexDirection: 'column',
           boxShadow: 'var(--shadow)',
           zIndex: 101,
-          animation: 'slideIn 0.25s cubic-bezier(.3,1.4,.5,1)',
         }}
       >
         {/* Drawer Header */}
@@ -59,7 +97,7 @@ export default function MyBoardDrawer() {
           }}
         >
           <div>
-            <h2 style={{ fontFamily: 'var(--hd)', fontSize: '22px', fontWeight: 800, margin: 0 }}>
+            <h2 id="mb-title" style={{ fontFamily: 'var(--hd)', fontSize: '22px', fontWeight: 800, margin: 0 }}>
               My board
             </h2>
             <span style={{ fontSize: '13.5px', color: 'var(--mute)' }}>
@@ -68,8 +106,9 @@ export default function MyBoardDrawer() {
           </div>
 
           <button
+            ref={close}
             onClick={() => setDrawerOpen(false)}
-            aria-label="Close"
+            aria-label="Close My board"
             style={{
               width: 36,
               height: 36,
@@ -125,6 +164,7 @@ export default function MyBoardDrawer() {
                   <span className="pbtag">{item.type === 'founder' ? 'Founder' : 'Story'}</span>
                   <button
                     onClick={() => togglePin(item)}
+                    aria-label={`Unpin ${item.title}`}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -167,12 +207,6 @@ export default function MyBoardDrawer() {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes slideIn {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
-        }
-      `}</style>
     </div>
   );
 }

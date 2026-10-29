@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getFeed } from '@/lib/content';
+import { cld, cldSrcSet } from '@/lib/cloudinary';
 
 export const metadata: Metadata = {
   title: 'Stories',
@@ -52,8 +53,11 @@ export default async function StoriesDirectoryPage() {
                   display: 'block',
                 }}
               >
+                {/* Cards show at most about 400px wide. Cloudinary resizes; other hosts pass through. */}
                 <img
-                  src={s.coverImage.url}
+                  src={cld(s.coverImage.url, 'c_limit,w_800')}
+                  srcSet={cldSrcSet(s.coverImage.url, [400, 800])}
+                  sizes="(max-width: 700px) 92vw, 400px"
                   alt={s.coverImage.alt}
                   loading="lazy"
                   style={{

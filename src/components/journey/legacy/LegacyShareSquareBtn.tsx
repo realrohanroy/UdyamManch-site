@@ -1,31 +1,30 @@
 'use client';
 
 import React, { useState } from 'react';
+import { copyText } from '@/lib/share';
 
 interface ShareSquareBtnProps {
-  url?: string;
+  url: string;
   label?: string;
   isLinkCircle?: boolean;
 }
 
 export default function LegacyShareSquareBtn({
-  url = 'https://farmingsolutions.in',
+  url,
   label = 'Share company profile',
   isLinkCircle = false,
 }: ShareSquareBtnProps) {
-  const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
+  const copied = status === 'copied';
 
+  // Always tell the reader what happened. A silent failure looks like a broken button.
   const handleCopy = async () => {
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard) {
-        await navigator.clipboard.writeText(url);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }
-    } catch (e) {
-      console.warn('Copy failed', e);
-    }
+    const ok = await copyText(url);
+    setStatus(ok ? 'copied' : 'failed');
+    setTimeout(() => setStatus('idle'), ok ? 2000 : 4000);
   };
+  const note = copied ? 'Link copied' : status === 'failed' ? 'Could not copy. Copy the link from the address bar.' : '';
+  const announce = <span className="sr-only" role="status">{note}</span>;
 
   if (isLinkCircle) {
     return (
@@ -33,7 +32,7 @@ export default function LegacyShareSquareBtn({
         className="share-btn link-btn"
         onClick={handleCopy}
         aria-label={label}
-        title={copied ? 'Link copied!' : 'Copy link'}
+        title={note || 'Copy link'}
         style={copied ? { background: 'var(--acc)', color: '#fff' } : undefined}
       >
         {copied ? (
@@ -44,6 +43,7 @@ export default function LegacyShareSquareBtn({
             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
           </svg>
         )}
+        {announce}
       </button>
     );
   }
@@ -53,7 +53,7 @@ export default function LegacyShareSquareBtn({
       className="share-square-btn"
       onClick={handleCopy}
       aria-label={label}
-      title={copied ? 'Link copied!' : 'Copy link'}
+      title={note || 'Copy link'}
     >
       {copied ? (
         <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--acc2)' }}>✓</span>
@@ -64,6 +64,7 @@ export default function LegacyShareSquareBtn({
           <line x1="12" y1="2" x2="12" y2="15" />
         </svg>
       )}
+      {announce}
     </button>
   );
 }

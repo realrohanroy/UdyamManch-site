@@ -20,14 +20,14 @@ export default function Footer() {
           <ul>
             <li><Link href="/stories">Stories</Link></li>
             <li><Link href="/founders">Founders</Link></li>
-            <li><Link href="/founders">Startup directory</Link></li>
+            <li><Link href="/founders?view=index">Startup directory</Link></li>
           </ul>
         </div>
 
         <div className="ft-col">
           <h2 className="ft-h">Elsewhere</h2>
           <ul>
-            <li><a href="#nl">Newsletter</a></li>
+            <li><a href="#subscribe">Newsletter</a></li>
             <li>
               <a href="https://www.instagram.com/udyammanch/" target="_blank" rel="noopener noreferrer">
                 Instagram
@@ -36,7 +36,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="ft-news">
+        <div className="ft-news" id="subscribe">
           <h2 className="ft-h">Get the latest from Udyam Manch</h2>
           <FooterSubscribe />
           <h2 className="ft-h ft-follow">Follow us</h2>

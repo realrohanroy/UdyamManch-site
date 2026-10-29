@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Udyam Manch mark, redrawn from the site logo (logo-light.webp on Cloudinary) for small sizes.
+       Brand colours (Design_System.md): sky, blue, indigo. The stand turns white in dark browser themes. -->
+  <style>
+    .s { fill: none; stroke: #1b1b3a; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; }
+    @media (prefers-color-scheme: dark) { .s { stroke: #ffffff; } }
+  </style>
+  <path fill="#75D3F5" d="M17 23.5 24 20v23h-7z" />
+  <path fill="#5299D3" d="M26.5 18.5 34 14v29h-7.5z" />
+  <path fill="#5455A5" d="M36.5 12.5 47 7c1.2 6 1.5 18 0 36H36.5z" />
+  <path class="s" d="M10 29v5a22 15 0 0 0 44 0v-5M32 49.5v7M22 57.5h20" />
+</svg>

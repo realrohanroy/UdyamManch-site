@@ -21,3 +21,32 @@ export function shareLinks(url: string, title: string, medium = 'share_bar') {
     copy: tagged(url, 'copy_link', medium),
   };
 }
+
+/**
+ * Copies text and says whether it worked. navigator.clipboard is missing or blocked in
+ * some in-app browsers (WhatsApp, Instagram) and on plain http, so fall back to the older
+ * select-and-copy. Never throws: callers show the reader the result either way.
+ */
+export async function copyText(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // Fall through to the older way.
+  }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok;
+  } catch {
+    return false;
+  }
+}

@@ -1,19 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { shareLinks, tagged } from '@/lib/share';
+import { copyText, shareLinks, tagged } from '@/lib/share';
 import { showToast } from '@/lib/journey/toast';
 import { BrandSvg, CheckSvg, LinkSvg } from './share-glyphs';
 
 export async function copyLink(url: string, medium: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(tagged(url, 'copy_link', medium));
-    showToast('Link copied.');
-    return true;
-  } catch {
-    showToast('Could not copy the link. Copy it from the address bar instead.');
-    return false;
-  }
+  const ok = await copyText(tagged(url, 'copy_link', medium));
+  showToast(ok ? 'Link copied.' : 'Could not copy the link. Copy it from the address bar instead.');
+  return ok;
 }
 
 /** Uses the phone's own share sheet (LinkedIn, X, Instagram, anything installed). Returns false if unavailable. */
@@ -78,14 +73,11 @@ export function CopyUrlButton({ url, label }: { url: string; label: string }) {
       className="fj-sb"
       aria-label={label}
       onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(url);
-          showToast('Link copied.');
-          setCopied(true);
-          setTimeout(() => setCopied(false), 2000);
-        } catch {
-          showToast('Could not copy the link. Copy it from the address bar instead.');
-        }
+        const ok = await copyText(url);
+        showToast(ok ? 'Link copied.' : 'Could not copy the link. Copy it from the address bar instead.');
+        if (!ok) return;
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       }}
     >
       {copied ? <CheckSvg /> : <LinkSvg />}

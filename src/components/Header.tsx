@@ -45,6 +45,18 @@ export default function Header() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Subscribe goes to the newsletter band on pages that have one (home), else to the footer
+  // form, which every page has. A bare #nl link did nothing on most pages.
+  const goSubscribe = (e: React.MouseEvent) => {
+    const target = document.getElementById('nl') ?? document.getElementById('subscribe');
+    if (!target) return;
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    target.querySelector<HTMLInputElement>('input[type=email]')?.focus({ preventScroll: true });
+  };
+
   const toggleTheme = () => {
     const root = document.documentElement;
     const dark = root.dataset.theme ? root.dataset.theme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -128,7 +140,7 @@ export default function Header() {
           </button>
 
           {/* Desktop Subscribe Button */}
-          <a href="#nl" className="btn btn-subscribe-desk" style={{ marginLeft: 0 }}>
+          <a href="#subscribe" onClick={goSubscribe} className="btn btn-subscribe-desk" style={{ marginLeft: 0 }}>
             Subscribe
           </a>
 
@@ -228,9 +240,9 @@ export default function Header() {
           <div className="mobile-nav-divider" />
 
           <a
-            href="#nl"
+            href="#subscribe"
             className="btn mobile-nav-btn"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={goSubscribe}
           >
             Subscribe to Newsletter
           </a>
