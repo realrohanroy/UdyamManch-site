@@ -9,4 +9,11 @@ export const FLAGS = {
    * Google Form. Off until founder submissions open (NEXT_PUBLIC_FEATURE_FORM_URL is still empty).
    */
   foundersSubmitCta: false,
+  /**
+   * TEMPORARY (branch temp/founders-only): only the founder story pages are reachable. Every
+   * other address, including / and /founders, is a 404. Enforced by src/middleware.ts (Node.js
+   * or Vercel) and by the .htaccess that scripts/build-static.mjs writes (Hostinger).
+   * Set to false, or go back to main, to open the whole site again.
+   */
+  foundersOnly: true,
 } as const;
