@@ -11,7 +11,7 @@ interface ShareBarProps {
 export default function ShareBar({ title, url }: ShareBarProps) {
   const [copied, setCopied] = useState(false);
 
-  const currentUrl = typeof window !== 'undefined' ? window.location.href : url || 'https://udyammanch.in';
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : url || 'https://udyammanch.com';
 
   const handleCopy = async () => {
     try {
