@@ -6,23 +6,10 @@ import { cache } from 'react';
 import { getJourneys } from './repo';
 import { STATE_NAMES } from './states';
 import type { FounderJourney, StateCode } from './types';
+import type { FounderCard } from './founder-filters';
 
-export interface FounderCard {
-  slug: string;
-  name: string;
-  company: string;
-  sector: string;
-  state: StateCode;
-  stateName: string;
-  city?: string;
-  founded?: number;
-  image?: string;
-  metric?: { value: string; label: string; verified: boolean };
-  sponsored: boolean;
-  editorsPick: boolean;
-  topics: string[];
-  sample: boolean;
-}
+// Filtering is shared with the browser, so it lives in founder-filters.ts (no server imports).
+export * from './founder-filters';
 
 function toCard(j: FounderJourney, now: number): FounderCard | null {
   const l = j.listing;
@@ -55,38 +42,6 @@ export const getFounderCards = cache(async (): Promise<FounderCard[]> => {
   return all.map((j) => toCard(j, now)).filter((c): c is FounderCard => c !== null);
 });
 
-export interface FounderQuery {
-  state?: StateCode;
-  sector?: string;
-  q?: string;
-  limit: number;
-}
-
-function rotate<T>(list: T[], by: number): T[] {
-  if (!list.length) return list;
-  const k = by % list.length;
-  return [...list.slice(k), ...list.slice(0, k)];
-}
-
-/**
- * Sponsored founders only ever appear in the Spotlight, always labelled, and
- * never change the order of the normal list. Slots rotate daily so paying
- * founders are shown evenly.
- */
-export function queryFounders(cards: FounderCard[], query: FounderQuery) {
-  const day = Math.floor(Date.now() / 86_400_000);
-  const spotlight = rotate(cards.filter((c) => c.sponsored), day).slice(0, 3);
-  const q = query.q?.trim().toLowerCase();
-  const normal = cards.filter((c) => !c.sponsored);
-  const matches = normal.filter(
-    (c) =>
-      (!query.state || c.state === query.state) &&
-      (!query.sector || c.sector === query.sector) &&
-      (!q || `${c.name} ${c.company} ${c.sector} ${c.stateName} ${c.topics.join(' ')}`.toLowerCase().includes(q)),
-  );
-  return { spotlight, matches, wall: matches.slice(0, query.limit), total: matches.length };
-}
-
 /** Numbers for the hero, map and insights. Always computed from the real list. */
 export function summarize(cards: FounderCard[]) {
   const states: Partial<Record<StateCode, number>> = {};
@@ -112,5 +67,3 @@ export function summarize(cards: FounderCard[]) {
   };
 }
 
-export const initials = (name: string) =>
-  name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();

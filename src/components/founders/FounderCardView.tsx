@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
-import { initials, type FounderCard } from '@/lib/journey/listing';
+import { initials, type FounderCard } from '@/lib/journey/founder-filters';
 import { cld } from '@/lib/cloudinary';
 
 /**
- * One founder card. Server component: no JS needed to read or click it.
+ * One founder card. Plain markup with no hooks, so it renders on the server or in FounderBrowser.
  * The whole card is clickable through a stretched link on the name.
  * Hover tilt and light are added by FoundersFx. No pin here, by decision.
  */

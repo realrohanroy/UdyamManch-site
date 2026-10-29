@@ -153,9 +153,14 @@ describe('B. Founders page under hostile or odd query strings', () => {
     assert.ok(!r.body.includes('<script>alert(1)</script>'));
   });
 
-  test('B3 a state filter with no founders shows an empty state, not a blank page', async () => {
+  // /founders is static and filters in the browser (DEC-026), so the HTML for a filtered URL is
+  // the full list. The empty state itself ("No founders match") needs a browser to check.
+  test('B3 a filtered URL serves the full list with the canonical address, never a blank page', async () => {
     const r = await get('/founders?state=kl');
-    assert.match(textOf(r.body), /no founders|nothing here|no results|0 founders|Showing 0/i);
+    assert.equal(r.status, 200);
+    assert.match(canonical(r.body) ?? '', /\/founders$/);
+    assert.match(textOf(r.body), /Showing \d+ of \d+ founders/);
+    assert.ok(!/Showing 0 of 0/.test(textOf(r.body)), 'server HTML lists founders');
   });
 
   test('B4 a 5000 character search answers in under 2 seconds', async () => {

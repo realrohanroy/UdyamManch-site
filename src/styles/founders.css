@@ -34,6 +34,8 @@
 
 /* map */
 .fd-stage{position:relative;margin-right:calc(-1 * max(0px,(100vw - 1240px)/2 + 24px))}
+/* The map bleeds to the screen edge, the caption row does not: keeps the selected-state chip inside the page gutter */
+.fd-stage .fd-mapcap{padding-right:max(0px,(100vw - 1240px)/2 + 24px)}
 /* The pinboard dot grid, fading out at the edges, so the map sits on the page instead of in a card */
 .fd-dots{position:absolute;inset:-2% -4% -2% -8%;background-image:radial-gradient(var(--dot) 1.4px,transparent 1.8px);background-size:22px 22px;-webkit-mask-image:radial-gradient(closest-side at 50% 52%,black 35%,transparent 95%);mask-image:radial-gradient(closest-side at 50% 52%,black 35%,transparent 95%);pointer-events:none}
 .fd-mapcap{position:relative;z-index:2;display:flex;align-items:center;gap:10px;min-height:40px}.fd-mapcap h2{font:700 14px var(--hd);letter-spacing:.06em;color:var(--mute)}
@@ -49,6 +51,8 @@
 .fd-st[data-l="4"],.fd-leg i[data-l="4"]{fill:var(--acc);background:var(--acc)}
 .fd-st:hover,a:focus-visible .fd-st{fill:var(--acc2)!important;stroke:var(--ink);transform:translateY(-3px) scale(1.03);filter:drop-shadow(0 0 12px color-mix(in srgb,var(--acc2) 55%,transparent))}
 .fd-st--sel{stroke:var(--ink);stroke-width:2.4}
+/* Lifted copy of the hovered state (FounderMap). Visual only: clicks pass through to the real link. */
+.fd-st--top{pointer-events:none;opacity:1;fill:var(--acc2)!important;stroke:var(--ink);transform:translateY(-3px) scale(1.03);filter:drop-shadow(0 0 12px color-mix(in srgb,var(--acc2) 55%,transparent));animation:fd-lift .3s cubic-bezier(.3,1.6,.5,1)}@keyframes fd-lift{from{transform:none;filter:none}}
 a:focus-visible .fd-st{stroke-width:2.4}
 .fd-tip{position:absolute;z-index:5;pointer-events:none;min-width:190px;background:var(--ink);color:var(--bg);border-radius:14px;padding:12px 16px;box-shadow:0 18px 40px -12px rgb(0 0 0 / .55);opacity:0;transform:translateY(8px) scale(.96);transition:opacity .18s,transform .22s cubic-bezier(.3,1.5,.5,1)}.fd-tip.on{opacity:1;transform:none}
 .fd-tip b{display:block;font:800 17px var(--hd)}.fd-tip__n{font:800 32px/1 var(--hd);letter-spacing:-.04em;color:var(--acc2);margin:4px 0}.fd-tip small{display:block;font:500 13px/1.35 var(--hd);opacity:.85}.fd-tip__go{margin-top:6px;color:var(--acc2)}
@@ -114,7 +118,7 @@ a:focus-visible .fd-st{stroke-width:2.4}
 
 /* tablet */
 @media(max-width:700px){.fd-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.fd-stat{padding-right:8px;margin-right:0;padding-left:12px}.fd-stat:first-child{padding-left:0}.fd-stat small{font-size:14px}}
-@media(max-width:1000px){.fd-stage{margin-right:0}.fd-grid{grid-template-columns:repeat(2,1fr)}.fd-hero{grid-template-columns:1fr}.fd-row{grid-template-columns:1fr}.fd-ix>a{grid-template-columns:1fr 130px 40px}.fd-ix>a span:nth-child(3),.fd-ix>a span:nth-child(4){display:none}}
+@media(max-width:1000px){.fd-stage{margin-right:0}.fd-stage .fd-mapcap{padding-right:0}.fd-grid{grid-template-columns:repeat(2,1fr)}.fd-hero{grid-template-columns:1fr}.fd-row{grid-template-columns:1fr}.fd-ix>a{grid-template-columns:1fr 130px 40px}.fd-ix>a span:nth-child(3),.fd-ix>a span:nth-child(4){display:none}}
 /* mobile: two column masonry (Design_System 6, Pinterest style) */
 @media(max-width:700px){.fd-root{font-size:17px}.fd-grid{display:block;columns:2;column-gap:12px}.fd-grid>*{break-inside:avoid;margin-bottom:12px;width:100%}
 .fd-pt{height:130px}.fd-pt__mono{font-size:64px;bottom:30px}.fd-bd{padding:12px}.fd-bd h3{font-size:19px}.fd-metric{flex-direction:column;gap:2px}.fd-metric b{font-size:26px}

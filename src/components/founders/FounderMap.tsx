@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
-import { useRouter } from 'next/navigation';
 import { STATE_CODES, type StateCode } from '@/lib/journey/types';
 import { STATE_NAMES } from '@/lib/journey/states';
 import { INDIA_PATHS, INDIA_VIEWBOX } from './india-states';
@@ -11,13 +10,12 @@ interface Props {
   counts: Partial<Record<StateCode, number>>;
   names: Partial<Record<StateCode, string[]>>;
   selected?: StateCode;
-  /** Server-built links: choosing a state, or clearing it when already selected. Works without JavaScript. */
+  /** Links for choosing a state, or clearing it when already selected. Real links, so they work without JavaScript. */
   hrefs: Record<StateCode, string>;
 }
 
 /** India map with a hover card and click to filter. Progressive: every state is a real link. */
 export default function FounderMap({ counts, names, selected, hrefs }: Props) {
-  const router = useRouter();
   const wrap = useRef<HTMLDivElement>(null);
   const svg = useRef<SVGSVGElement>(null);
   const [tip, setTip] = useState<{ code: StateCode; x: number; y: number } | null>(null);
@@ -32,8 +30,6 @@ export default function FounderMap({ counts, names, selected, hrefs }: Props) {
     return () => window.clearTimeout(t);
   }, [counts]);
 
-  // The hovered state is drawn last so its lift is never covered by a neighbour.
-  const order = tip ? [...STATE_CODES.filter((c) => c !== tip.code), tip.code] : [...STATE_CODES];
 
   // Keyboard and screen reader users get the same name card, placed beside the focused state.
   const showAt = (code: StateCode, el: Element) => {
@@ -64,7 +60,7 @@ export default function FounderMap({ counts, names, selected, hrefs }: Props) {
     <div className="fd-mapwrap" ref={wrap} onMouseMove={onMove} onMouseLeave={() => setTip(null)}>
       <svg ref={svg} className={`fd-map${done ? ' fd-map--done' : ''}`} viewBox={INDIA_VIEWBOX} role="group" aria-label="Map of India. Choose a state to filter founders.">
         <g>
-          {order.map((c) => {
+          {STATE_CODES.map((c) => {
             const k = counts[c] ?? 0;
             return (
               <a
@@ -74,8 +70,10 @@ export default function FounderMap({ counts, names, selected, hrefs }: Props) {
                 onFocus={(e) => showAt(c, e.currentTarget.querySelector('path') ?? e.currentTarget)}
                 onBlur={() => setTip(null)}
                 onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // new tab still works
                   e.preventDefault();
-                  router.push(hrefs[c], { scroll: false });
+                  // Filtering happens in the browser (FounderBrowser), so only the URL changes. No server trip.
+                  window.history.pushState(null, '', hrefs[c]);
                   document.getElementById('wall')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
               >
@@ -90,6 +88,13 @@ export default function FounderMap({ counts, names, selected, hrefs }: Props) {
             );
           })}
         </g>
+        {/*
+          The hovered state, drawn again on top so its lift is never covered by a neighbour.
+          A copy, not a reorder: moving the real link in the DOM between pointer down and up
+          made the browser drop the click whenever the pointer moved onto a state and clicked at once.
+          pointer-events: none, so clicks always reach the real link underneath.
+        */}
+        {tip && <path key={tip.code} className="fd-st fd-st--top" data-l={level(counts[tip.code] ?? 0)} d={INDIA_PATHS[tip.code]} aria-hidden="true" />}
       </svg>
       <div className={`fd-tip${tip ? ' on' : ''}`} style={tip ? { left: tip.x, top: tip.y } : undefined} aria-hidden="true">
         {tip && (

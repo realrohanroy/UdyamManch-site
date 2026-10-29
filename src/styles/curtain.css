@@ -24,3 +24,19 @@
 @media (prefers-reduced-motion: reduce) {
   .pc { display: none; }
 }
+
+/* While the curtain covers the screen, hold every CSS animation on the page, so the
+   new page's entrance plays once it can be seen. Set and cleared by PageCurtain.tsx.
+   The curtain itself moves with the Web Animations API, which this does not affect. */
+html[data-curtain] body *,
+html[data-curtain] body *::before,
+html[data-curtain] body *::after {
+  animation-play-state: paused !important;
+}
+
+/* The new page rendered before the curtain finished closing: keep it out of sight
+   for those last frames, so it never shows through the gap. */
+html[data-curtain-wait] main,
+html[data-curtain-wait] body > footer {
+  visibility: hidden;
+}

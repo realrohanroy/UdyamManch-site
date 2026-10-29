@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 /**
@@ -8,21 +8,32 @@ import { usePathname, useRouter } from 'next/navigation';
  *
  * HOW IT WORKS
  * Next.js App Router has no built-in page transitions, so we do it in three steps:
- *   1. A capture-phase click listener spots internal link clicks and holds the navigation.
- *   2. The curtain wipes in (380ms), then we call router.push().
- *   3. When usePathname() changes, the new page has rendered, so the curtain wipes out (480ms).
+ *   1. A capture-phase click listener spots internal link clicks and takes them over.
+ *   2. router.push() starts at once, and the curtain wipes in (380ms) at the same time.
+ *   3. When usePathname() changes, the new page has rendered. As soon as the curtain is
+ *      fully closed and the page is in, the curtain wipes out (440ms).
  * One listener on the document covers every link on the site, so no component
  * needs to opt in, and new pages get the curtain for free.
+ *
+ * KEEPING IT QUICK
+ * The curtain should only ever wait for its own animation, never for the network.
+ * So the next page is prefetched as soon as the visitor shows intent (pointer over a
+ * link, a finger down, keyboard focus), and the navigation itself starts at the click.
+ * Download and render happen while the curtain is closing. If the page is ready before
+ * the curtain has closed, it is hidden for those frames (data-curtain-wait).
+ * The exit starts fast (ease out), so an open curtain never looks frozen.
  *
  * SAFETY NET
  * The curtain never traps the visitor. It is skipped for reduced motion, new tab
  * and modified clicks, downloads, hash links, same-page filters and /admin. If a
- * navigation stalls, a timeout lifts the curtain anyway.
+ * navigation stalls, a timeout lifts the curtain anyway. An interrupted animation
+ * counts as finished, so the curtain can never get stuck and swallow later clicks.
  */
 
-const EASE = 'cubic-bezier(.7,0,.2,1)';
+const EASE_IN = 'cubic-bezier(.7,0,.2,1)';
+const EASE_OUT = 'cubic-bezier(.25,.7,.25,1)';
 const IN_MS = 380;
-const OUT_MS = 480;
+const OUT_MS = 440;
 const STAGGER_MS = 70;
 const MAX_WAIT_MS = 4000;
 
@@ -46,19 +57,39 @@ function geometry() {
   return { w, h, b, width: L + b + 2, d, before: -(w + 2 * b), cover: -b, after: w };
 }
 
-function skipLink(a: HTMLAnchorElement, e: MouseEvent): boolean {
-  if (e.defaultPrevented || e.button !== 0) return true;
-  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return true;
-  if (a.target && a.target !== '_self') return true;
-  if (a.hasAttribute('download') || a.hasAttribute('data-no-curtain')) return true;
+/**
+ * The internal page a link leads to, or null when the curtain should stay out of it.
+ * Reads attributes, not a.href, because links inside an SVG (the Founders map) are
+ * SVGAElements whose href is an object, not a string.
+ */
+function destination(a: Element): URL | null {
+  const raw = a.getAttribute('href');
+  if (!raw || raw.startsWith('#')) return null;
+  const target = a.getAttribute('target');
+  if (target && target !== '_self') return null;
+  if (a.hasAttribute('download') || a.hasAttribute('data-no-curtain')) return null;
 
-  const url = new URL(a.href, window.location.href);
-  if (url.origin !== window.location.origin) return true;
-  if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/api')) return true;
+  const url = new URL(raw, window.location.href);
+  if (url.origin !== window.location.origin) return null;
+  if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/api')) return null;
   // Same page: #hash jumps and filter links that only change the query string need no wipe.
-  if (url.pathname === window.location.pathname) return true;
-  return false;
+  if (url.pathname === window.location.pathname) return null;
+  return url;
 }
+
+/**
+ * While the screen is covered, CSS animations on the page are paused (curtain.css), so the
+ * new page's entrance plays when the visitor can see it, not behind the curtain.
+ */
+const hold = (on: boolean) => document.documentElement.toggleAttribute('data-curtain', on);
+
+/** Hides the new page if it is ready before the curtain has fully closed (curtain.css). */
+const wait = (on: boolean) => document.documentElement.toggleAttribute('data-curtain-wait', on);
+
+// useLayoutEffect warns during server rendering, where it would do nothing anyway.
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+const linkOf = (t: EventTarget | null) => (t as Element | null)?.closest?.('a[href]') ?? null;
 
 export default function PageCurtain() {
   const router = useRouter();
@@ -66,8 +97,9 @@ export default function PageCurtain() {
   const lead = useRef<SVGSVGElement>(null);
   const main = useRef<SVGSVGElement>(null);
   const geo = useRef<ReturnType<typeof geometry>>({ w: 0, h: 0, b: 0, width: 0, d: '', before: 0, cover: 0, after: 0 }); // measured in arm(), never during render
-  const covered = useRef(false);
-  const busy = useRef(false);
+  // idle -> closing -> closed -> opening -> idle. The new page can arrive while closing or closed.
+  const phase = useRef<'idle' | 'closing' | 'closed' | 'opening'>('idle');
+  const arrived = useRef(false);
   const failsafe = useRef<number>();
 
   const place = (x: number) => `translateX(${x}px)`;
@@ -94,79 +126,124 @@ export default function PageCurtain() {
     const delays = order === 'in' ? [0, STAGGER_MS] : [STAGGER_MS, 0];
     const runs = layers.map((el, i) => {
       el!.style.visibility = 'visible';
-      return el!
-        .animate([{ transform: place(from) }, { transform: place(to) }], {
-          duration: ms,
-          delay: delays[i],
-          easing: EASE,
-          fill: 'both',
-        })
-        .finished.then((anim) => {
-          el!.style.transform = place(to);
-          anim.cancel();
-        });
+      const anim = el!.animate([{ transform: place(from) }, { transform: place(to) }], {
+        duration: ms,
+        delay: delays[i],
+        easing: order === 'in' ? EASE_IN : EASE_OUT,
+        fill: 'both',
+      });
+      // finished rejects if the animation is cancelled. Treat that as done, or the
+      // curtain would stay busy and every later link click would be swallowed.
+      return anim.finished.catch(() => undefined).then(() => {
+        el!.style.transform = place(to);
+        anim.cancel();
+      });
     });
     return Promise.all(runs).then(() => undefined);
   }, []);
 
-  const reveal = useCallback(async () => {
+  /** Opens the curtain once both are true: it has finished closing, and the new page is in. */
+  const tryOpen = useCallback(() => {
+    if (phase.current !== 'closed' || !arrived.current) return;
+    phase.current = 'opening';
     window.clearTimeout(failsafe.current);
-    if (!covered.current) return;
-    await wipe(geo.current.cover, geo.current.after, OUT_MS, 'out');
-    [lead.current, main.current].forEach((el) => {
-      if (el) el.style.visibility = 'hidden';
+    // One frame, so the new page is painted under the closed curtain before it leaves.
+    requestAnimationFrame(() => {
+      wait(false);
+      hold(false);
+      void wipe(geo.current.cover, geo.current.after, OUT_MS, 'out').then(() => {
+        [lead.current, main.current].forEach((el) => {
+          if (el) el.style.visibility = 'hidden';
+        });
+        arm();
+        phase.current = 'idle';
+      });
     });
-    arm();
-    covered.current = false;
-    busy.current = false;
   }, [wipe, arm]);
 
-  // The route changed, so the new page is on screen. Wait two frames so it has painted.
-  useEffect(() => {
-    if (!covered.current) return;
-    const id = requestAnimationFrame(() => requestAnimationFrame(() => void reveal()));
-    return () => cancelAnimationFrame(id);
-  }, [pathname, reveal]);
+  // The route changed, so React has committed the new page. A layout effect runs before
+  // the browser paints, so if the curtain is still closing the page can be hidden in time.
+  useIsoLayoutEffect(() => {
+    if (phase.current !== 'closing' && phase.current !== 'closed') return;
+    arrived.current = true;
+    if (phase.current === 'closing') {
+      wait(true); // not covered yet: keep the new page out of sight for these few frames
+      hold(true);
+    }
+    tryOpen();
+  }, [pathname, tryOpen]);
 
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const warmed = new Set<string>();
+
+    // Fetch a page we are likely to open next. Next dedupes, but skip the call entirely once done.
+    const warm = (url: URL) => {
+      const key = url.pathname + url.search;
+      if (warmed.has(key)) return;
+      warmed.add(key);
+      router.prefetch(key);
+    };
+
+    const onIntent = (e: Event) => {
+      const a = linkOf(e.target);
+      const url = a && destination(a);
+      if (url) warm(url);
+    };
 
     const onClick = (e: MouseEvent) => {
-      if (reduce.matches) return;
-      const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
-      if (!a || skipLink(a, e)) return;
+      if (reduce.matches || e.defaultPrevented || e.button !== 0) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = linkOf(e.target);
+      const url = a && destination(a);
+      if (!url) return;
 
       e.preventDefault(); // we take over, then push the route ourselves
-      if (busy.current) return; // ignore double clicks while the curtain is moving
-      busy.current = true;
+      if (phase.current !== 'idle') return; // ignore double clicks while the curtain is moving
+      phase.current = 'closing';
+      arrived.current = false;
 
-      const href = a.href;
-      const url = new URL(href);
       arm(); // measure the screen now, in case it was resized or rotated
-      wipe(geo.current.before, geo.current.cover, IN_MS, 'in').then(() => {
-        covered.current = true;
-        router.push(url.pathname + url.search + url.hash);
-        // If the route never changes (offline, error), lift the curtain anyway.
-        failsafe.current = window.setTimeout(() => void reveal(), MAX_WAIT_MS);
+      // Navigate now, not after the curtain closes: download and render of the new page
+      // run while the curtain is moving, instead of after it.
+      router.push(url.pathname + url.search + url.hash);
+      // If the route never changes (offline, error, a redirect back here), open anyway.
+      failsafe.current = window.setTimeout(() => {
+        arrived.current = true;
+        tryOpen();
+      }, MAX_WAIT_MS);
+      void wipe(geo.current.before, geo.current.cover, IN_MS, 'in').then(() => {
+        phase.current = 'closed';
+        hold(true);
+        tryOpen();
       });
     };
 
     // Coming back from the back/forward cache must never show a stuck curtain.
     const onPageShow = (e: PageTransitionEvent) => {
-      if (e.persisted) {
-        covered.current = true;
-        void reveal();
+      if (e.persisted && phase.current !== 'idle') {
+        phase.current = 'closed';
+        arrived.current = true;
+        tryOpen();
       }
     };
 
     document.addEventListener('click', onClick, true);
+    document.addEventListener('pointerover', onIntent, { passive: true });
+    document.addEventListener('pointerdown', onIntent, { passive: true });
+    document.addEventListener('focusin', onIntent);
     window.addEventListener('pageshow', onPageShow);
     return () => {
       document.removeEventListener('click', onClick, true);
+      document.removeEventListener('pointerover', onIntent);
+      document.removeEventListener('pointerdown', onIntent);
+      document.removeEventListener('focusin', onIntent);
       window.removeEventListener('pageshow', onPageShow);
       window.clearTimeout(failsafe.current);
+      hold(false);
+      wait(false);
     };
-  }, [router, wipe, reveal, arm]);
+  }, [router, wipe, tryOpen, arm]);
 
   useEffect(() => arm(), [arm]);
 
