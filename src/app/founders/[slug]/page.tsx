@@ -80,7 +80,7 @@ export default async function FounderJourneyPage({ params }: Props) {
     dateModified: j.updatedAt ?? j.publishedAt,
     author: [{ '@type': 'Organization', name: j.author }],
     about: { '@type': 'Person', name: j.founder.name, worksFor: { '@type': 'Organization', name: j.company.name, url: j.company.website } },
-    publisher: { '@type': 'Organization', name: SITE_NAME, logo: { '@type': 'ImageObject', url: absoluteUrl('/assets/logo-light.webp') } },
+    publisher: { '@type': 'Organization', name: SITE_NAME, logo: { '@type': 'ImageObject', url: 'https://res.cloudinary.com/nkhny4aq/image/upload/f_auto,q_auto/v1792668848/logo-light.webp' } },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
   };
 

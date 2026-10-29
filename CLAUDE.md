@@ -11,8 +11,7 @@ Read these before changing anything:
 Reference docs (open when relevant): `PRD.md` (product scope), `Design_System.md`
 (tokens, type, components, checklist in section 13), `.planning/STATE.md`
 (phase status and decision log), `.planning/REQUIREMENTS.md` (REQ IDs).
-Visual source of truth: the prototype `index.html` (identical to
-`udyam-manch-magazine-walk(1) copy.html`).
+Visual source of truth: the prototype `index.html`.
 
 ## Commands
 
@@ -64,5 +63,6 @@ Visual source of truth: the prototype `index.html` (identical to
   design system. Changing it needs a migration so visitors keep their pins.
 - `editorial.css` still has ~50 hard-coded hex values in older components.
 - Verify founding years (Kishan 2006, Ayush 2023). Ayush hero image is only
-  666px wide; Ayush share image is WebP (LinkedIn prefers JPEG).
+  666px wide and still served from `public/assets/`; the 1672px original is in
+  `../UdyamManch-cleanup-2026-10-29/`, ready to upload to Cloudinary.
 - Sanity project ID not connected yet (Phase 5 blocker).

@@ -4,6 +4,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useBoard } from '@/lib/board';
 import MagneticDots from './MagneticDots';
+import { cld } from '@/lib/cloudinary';
+
+// Kishan's artwork, on Cloudinary like every other founder image (DEC-025).
+const KISHAN_PORTRAIT = 'https://res.cloudinary.com/nkhny4aq/image/upload/v1792668702/double-portrait-yellow-halo.webp';
+const KISHAN_MAP = 'https://res.cloudinary.com/nkhny4aq/image/upload/v1792668717/india-network-map.png';
 
 export default function PinboardHero() {
   const { pinnedItems, togglePin, isPinned } = useBoard();
@@ -127,7 +132,7 @@ export default function PinboardHero() {
                       type: 'founder',
                       title: "Kishan for Kisan: From Rajasthan's Soil to Farms Across India.",
                       subtitle: 'Farming Solutions India',
-                      imageUrl: '/assets/kishan-panchal/double-portrait-yellow-halo.webp',
+                      imageUrl: KISHAN_PORTRAIT,
                     })
                   }
                   data-tip={isPinned('kishan-panchal-farming-solutions-india') ? 'Pinned. Click to unpin' : 'Pin to My board'}
@@ -145,7 +150,7 @@ export default function PinboardHero() {
                 <div className="pbart">
                   <Link href="/founders/kishan-panchal-farming-solutions-india">
                     <img
-                      src="/assets/kishan-panchal/double-portrait-yellow-halo.webp"
+                      src={cld(KISHAN_PORTRAIT, 'c_limit,w_640')}
                       alt="Kishan Panchal, Founder of Farming Solutions India"
                       loading="lazy"
                     />
@@ -204,7 +209,7 @@ export default function PinboardHero() {
                 <span className="pbtag">Startup to know</span>
                 <div className="pbart" style={{ minHeight: '120px', background: 'var(--board)', overflow: 'hidden' }}>
                   <img
-                    src="/assets/kishan-panchal/india-network-map.webp"
+                    src={cld(KISHAN_MAP, 'c_limit,w_640')}
                     alt="Farming Solutions India project map"
                     loading="lazy"
                   />

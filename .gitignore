@@ -3,8 +3,6 @@
 out/
 build/
 dist/
-test-unzip/
-udyammanch-netlify.zip
 *.tsbuildinfo
 
 # Node

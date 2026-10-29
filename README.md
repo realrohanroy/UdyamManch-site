@@ -54,7 +54,7 @@ src/
 │   └── cloudinary.ts    # image URL helper
 ├── sanity/              # Studio config and schemas
 └── styles/              # tokens.css (all colours) and page styles
-public/assets/           # small local files: SVG illustrations, logo fallbacks
+public/assets/           # small local files only: SVG illustrations, a few images not yet on Cloudinary
 docs/                    # FOUNDER_JOURNEYS.md and other guides
 .planning/               # phases, requirements and the decision log
 ```
@@ -88,11 +88,11 @@ https://res.cloudinary.com/nkhny4aq/image/upload/c_fill,g_face,w_1200,h_630/f_jp
 
 **Other image sources**
 
-- `public/assets/`: small SVG illustrations and logo fallbacks only. Do not commit large photos here; they ship with every deploy and are never resized.
+- `public/assets/`: small SVG illustrations only. Do not commit large photos here; they ship with every deploy and are never resized.
 - Unsplash (`images.unsplash.com`): placeholder photos on sample content.
 - Sanity (`cdn.sanity.io`): images editors upload in the Studio, once Sanity is connected.
 
-Older images not yet on Cloudinary: Ayush Shaw's photos in `public/assets/ayush-shaw/`, plus a few unused PNGs there and in `public/assets/kishan-panchal/`.
+Still served locally: Ayush Shaw's hero, share image and company logo (`public/assets/ayush-shaw/`), and Karthik R's two SVG diagrams (`public/assets/karthik-r/`). Everything else is on Cloudinary.
 
 ## Deploying
 
