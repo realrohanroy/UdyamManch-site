@@ -24,12 +24,7 @@ export default function FounderCardView({ c, i, tone }: { c: FounderCard; i: num
         <div className="fd-sec">{c.sector.toUpperCase()}</div>
         <h3><Link href={`/founders/${c.slug}`} className="fd-stretch">{c.name}</Link></h3>
         <div className="fd-role">Founder, {c.company}</div>
-        {c.metric && (
-          <>
-            <div className="fd-metric"><b>{c.metric.value}</b><span>{c.metric.label}</span></div>
-            <span className={`fd-vt${c.metric.verified ? ' fd-vt--ok' : ''}`}>{c.metric.verified ? 'Verified' : 'Self-reported'}</span>
-          </>
-        )}
+        {c.metric && <div className="fd-metric"><b>{c.metric.value}</b><span>{c.metric.label}</span></div>}
         <div className="fd-rs" aria-hidden="true">Read story <span>&rarr;</span></div>
       </div>
     </article>

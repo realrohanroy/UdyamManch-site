@@ -29,8 +29,9 @@ These are open today. Each one needs a decision before the first public launch, 
       When submissions open, also set `FLAGS.foundersSubmitCta` to true in `src/lib/flags.ts`; it
       brings back the "Building something in India?" section at the bottom of /founders.
 - [ ] **Facts to verify with founders:** founding years (Kishan 2006, Ayush 2023), Rohit's founding
-      year (missing), and every number marked Self-reported. Pass when each founder has confirmed
-      their page in writing.
+      year (missing), and every number on each page. The site says every founder is verified by our
+      team (DEC-029), so this must be true before launch. Pass when each founder has confirmed their
+      page in writing.
 - [ ] **Sample content.** The story "Beyond the metro moat" is a labelled sample (`sample: true`,
       noindex, not in the sitemap). Decide whether a sample belongs on the launch site at all.
 - [ ] **Ayush's images.** His hero is only 666px wide and, with his share image, is served from

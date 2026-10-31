@@ -232,7 +232,7 @@ const journey: FounderJourney = {
   // Founders page. Bangalore is in Karnataka. The headline number is the founder's own claim.
   listing: {
     state: 'ka',
-    metric: { value: '24/7', label: 'AI trading system', verified: false },
+    metric: { value: '24/7', label: 'AI trading system' },
   },
 
   seo: {

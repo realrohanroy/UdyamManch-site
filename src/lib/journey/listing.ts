@@ -48,13 +48,11 @@ export function summarize(cards: FounderCard[]) {
   const namesByState: Partial<Record<StateCode, string[]>> = {};
   const sectors = new Map<string, number>();
   const years = new Map<number, number>();
-  let verified = 0;
   for (const c of cards) {
     states[c.state] = (states[c.state] ?? 0) + 1;
     (namesByState[c.state] ??= []).push(c.name);
     sectors.set(c.sector, (sectors.get(c.sector) ?? 0) + 1);
     if (c.founded) years.set(c.founded, (years.get(c.founded) ?? 0) + 1);
-    if (c.metric?.verified) verified += 1;
   }
   return {
     total: cards.length,
@@ -63,7 +61,6 @@ export function summarize(cards: FounderCard[]) {
     stateCount: Object.keys(states).length,
     sectors: Array.from(sectors.entries()).sort((a, b) => b[1] - a[1]),
     years: Array.from(years.entries()).sort((a, b) => a[0] - b[0]),
-    verified,
   };
 }
 

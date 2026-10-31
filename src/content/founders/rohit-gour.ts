@@ -166,7 +166,7 @@ const journey: FounderJourney = {
   // Founders page. Bhopal is in Madhya Pradesh. The headline number is a plan, not a result.
   listing: {
     state: 'mp',
-    metric: { value: '75%', label: 'women on the team, planned', verified: false },
+    metric: { value: '75%', label: 'women on the team, planned' },
   },
 
   seo: {

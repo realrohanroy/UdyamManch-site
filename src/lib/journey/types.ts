@@ -105,7 +105,8 @@ export type Placement = 'editors-pick' | 'sponsored';
 export interface Listing {
   state: StateCode;
   /** One headline number for the card, e.g. "10,000" and "farmers trained". */
-  metric?: { value: string; label: string; verified: boolean };
+  /** Shown on the Founders page card. Every published founder is verified by the team first (DEC-029). */
+  metric?: { value: string; label: string };
   /** Paid slots are ALWAYS labelled "Sponsored" on the page (Design_System 6.x). */
   placement?: Placement;
   /** ISO date. A sponsored slot must have one; after it the slot lapses. */

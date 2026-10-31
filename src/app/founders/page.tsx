@@ -121,10 +121,10 @@ export default async function FoundersPage() {
               ))}
             </div>
           </div>
-          <div className="fd-pn fd-rv"><h3>How we label numbers</h3>
-            <div className="fd-meter fd-bar"><i style={{ '--w': pct(sum.verified, Math.max(1, sum.total)) } as CSSProperties} /></div>
-            <b>{sum.verified} verified by our team, {sum.total - sum.verified} self-reported</b>
-            <p>We say Verified only after checking a number against a document or a call. Everything else says Self-reported.</p>
+          {/* Every founder is verified before publishing (DEC-029), so there is no per-card badge to explain. */}
+          <div className="fd-pn fd-rv"><h3>How founders get here</h3>
+            <b>Every founder on this page is verified by our team.</b>
+            <p>We check each founder, and every number we print, against a document or a call before a story goes live.</p>
           </div>
         </div>
       </section>

@@ -118,10 +118,10 @@ const journey: FounderJourney = {
     'Circular economy',
   ],
   related: ['kishan-panchal-farming-solutions-india'],
-  // Founders page. State confirmed by Rohan on 24 Oct 2026. Swap the metric for a real headline number once verified.
+  // Founders page. State confirmed by Rohan on 24 Oct 2026. Swap the metric for a real headline number when we have one.
   listing: {
     state: 'wb',
-    metric: { value: '2023', label: 'year founded', verified: false },
+    metric: { value: '2023', label: 'year founded' },
   },
 
   seo: {

@@ -16,7 +16,7 @@ export interface FounderCard {
   city?: string;
   founded?: number;
   image?: string;
-  metric?: { value: string; label: string; verified: boolean };
+  metric?: { value: string; label: string };
   sponsored: boolean;
   editorsPick: boolean;
   topics: string[];

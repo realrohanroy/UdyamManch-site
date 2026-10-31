@@ -289,7 +289,6 @@ export const founderJourneyType = defineType({
           fields: [
             defineField({ name: 'value', type: 'string', validation: (r) => r.required().max(12) }),
             defineField({ name: 'label', type: 'string', validation: (r) => r.required().max(40) }),
-            defineField({ name: 'verified', title: 'Verified by our team', type: 'boolean', initialValue: false }),
           ],
         }),
         defineField({

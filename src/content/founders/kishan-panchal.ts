@@ -120,10 +120,10 @@ const journey: FounderJourney = {
 
   topics: ['Agriculture', 'Protected farming', 'Irrigation', 'Solar pumps', 'Rajasthan'],
   related: ['ayush-shaw-shaw-agrivolt-gas'],
-  // Founders page. The state comes from the city above. Swap the metric for a real headline number and set verified: true once checked.
+  // Founders page. The state comes from the city above. Swap the metric for a real headline number when we have one.
   listing: {
     state: 'rj',
-    metric: { value: '2006', label: 'year founded', verified: false },
+    metric: { value: '2006', label: 'year founded' },
   },
 
   seo: {
