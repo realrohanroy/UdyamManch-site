@@ -12,6 +12,7 @@ import assert from 'node:assert/strict';
 import { BASE, get, follow, meta, canonical, jsonLd, internalLinks, images, textOf, imageInfo } from './lib/http.mjs';
 
 const JOURNEYS = [
+  { slug: 'shraddhanjali-sonune-sponsify', name: 'Shraddhanjali Sonune', sample: false },
   { slug: 'rohit-gour-animation-cult', name: 'Rohit Gour', sample: false },
   { slug: 'karthik-r-aurumcrypto', name: 'Karthik R', sample: false },
   { slug: 'ayush-shaw-shaw-agrivolt-gas', name: 'Ayush Shaw', sample: false },
@@ -192,7 +193,8 @@ describe('C. Share previews and SEO', () => {
         continue;
       }
       // Production URLs point at the live domain; test the same path on this server.
-      const local = new URL(new URL(url).pathname + new URL(url).search, url.includes('udyammanch.in') ? BASE : url).toString();
+      const ours = /(^|\.)udyammanch\.(com|in)$/.test(new URL(url).hostname);
+      const local = new URL(new URL(url).pathname + new URL(url).search, ours ? BASE : url).toString();
       const i = await imageInfo(local);
       if (i.status !== 200) problems.push(`${p}: og:image ${i.status} (${url})`);
       else {

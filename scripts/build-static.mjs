@@ -99,10 +99,20 @@ edit('src/sanity/client.ts', "import { createClient } from 'next-sanity';", "imp
 // Node image generator is broken on Windows (it path.joins a file:// URL). So the images are
 // saved from a normal production build and dropped in as plain files, which Next also accepts:
 // app/opengraph-image.png and app/apple-icon.png get the same <meta> and <link> tags.
-// The per-slug image routes go: every founder sets seo.image, and the sample story falls
-// back to the site card. A founder without seo.image would point at a missing image, so
-// the check in step 6 stops the build.
-const images = await fetchImages(['/opengraph-image', '/apple-icon']);
+// Founder share cards are saved too, as founders/<slug>.og.png (step 6), for founders without
+// a hand-made seo.image; the sample story falls back to the site card.
+const founderSlugs = fs
+  .readdirSync(path.join(ROOT, 'src/content/founders'))
+  .filter((n) => n.endsWith('.ts') && n !== 'index.ts')
+  .map((n) => fs.readFileSync(path.join(ROOT, 'src/content/founders', n), 'utf8').match(/slug:\s*'([^']+)'/)?.[1])
+  .filter(Boolean);
+const images = await fetchImages(['/opengraph-image', '/apple-icon', ...founderSlugs.map((s) => `/founders/${s}/opengraph-image`)]);
+// Point those founders' share tags at the saved card, served at the same address as on a server.
+edit(
+  'src/app/founders/[slug]/page.tsx',
+  'const image = j.seo?.image ? absoluteUrl(j.seo.image) : undefined;',
+  'const image = absoluteUrl(j.seo?.image ?? `/founders/${j.slug}/opengraph-image`);',
+);
 for (const f of ['src/app/opengraph-image.tsx', 'src/app/apple-icon.tsx', 'src/app/founders/[slug]/opengraph-image.tsx', 'src/app/stories/[slug]/opengraph-image.tsx']) {
   fs.rmSync(path.join(STAGE, f));
 }
@@ -135,13 +145,9 @@ const moveIntoFolder = (dir) => {
 };
 moveIntoFolder(OUT_DIR);
 
-// Every founder page must name its own share image (seo.image): the per-founder image route
-// does not exist in the static site.
-for (const f of fs.readdirSync(path.join(OUT_DIR, 'founders')).filter((n) => n.endsWith('.html') && n !== 'index.html')) {
-  if (fs.readFileSync(path.join(OUT_DIR, 'founders', f), 'utf8').includes(`/founders/${f.slice(0, -5)}/opengraph-image`)) {
-    throw new Error(`build-static: founders/${f} has no seo.image. Add a 1200 x 630 share image to its content file.`);
-  }
-}
+// Founder share cards, next to the pages. .htaccess serves founders/x.og.png at
+// /founders/x/opengraph-image, the address the pages and the JSON-LD use.
+for (const s of founderSlugs) fs.writeFileSync(path.join(OUT_DIR, 'founders', `${s}.og.png`), images[`/founders/${s}/opengraph-image`]);
 
 const esc = (s) => s.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
 const toRegex = (src) =>
@@ -187,6 +193,7 @@ RewriteRule ^favicon\\.ico$ /icon.svg [L]
 
 # Generated images are plain .png files here; pages also link the address without the extension
 RewriteRule ^(opengraph-image|apple-icon)$ /$1.png [L]
+RewriteRule ^founders/([^/]+)/opengraph-image$ /founders/$1.og.png [L]
 
 # Clean addresses: /founders/x -> founders/x.html, /founders -> founders/index.html
 RewriteCond %{REQUEST_FILENAME} !-f

@@ -1950,6 +1950,16 @@ header.hide ~ main .tools {
   .hero-stage--photo .stage-quote-card { top: 22px; right: 0; }
 }
 
+/* Phones: on a cut-out the name and the quote card shared the top row, so a long name
+   ran under the card. The card moves to the bottom corner and the name gets the row,
+   unless a signature already sits in that corner (Kishan). */
+@media(max-width:600px) {
+  .hero-stage:not(.hero-stage--photo):not(:has(.stage-signature)) .stage-quote-card { top: auto; bottom: 4%; right: 0; }
+  /* Same on a full photo: the card pins to the photo's bottom-left corner instead. */
+  .hero-stage--photo { padding-bottom: 28px; }
+  .hero-stage--photo .stage-quote-card { top: auto; bottom: 0; left: 12px; right: auto; }
+}
+
 @media(max-width:900px) {
   .hero, .two, .news, .prof { grid-template-columns: 1fr; }
   .trend { grid-template-columns: repeat(2, minmax(0, 1fr)); }

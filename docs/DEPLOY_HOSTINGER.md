@@ -41,7 +41,7 @@ redirects, HTTPS and security headers. How it works is explained at the top of
   webhook. Today content lives in `src/content/founders/`, so every change needs a deploy anyway.
 - No Sanity Studio at `/admin` (it is not connected yet, so nothing is lost today).
 - Capitalised addresses are not lowercased (`/founders/Rohit-...` is a 404, not a redirect).
-- Every founder needs its own share image (`seo.image`); the build stops if one is missing.
+- Founders without a photo get their generated share card, saved from a normal build (no `seo.image` needed).
 
 When Sanity is connected, move to a Node.js app (part B): that is when these start to matter.
 
