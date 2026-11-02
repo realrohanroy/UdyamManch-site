@@ -9,5 +9,7 @@ import kishanPanchal from './kishan-panchal';
 import karthikR from './karthik-r';
 import rohitGour from './rohit-gour';
 import shraddhanjaliSonune from './shraddhanjali-sonune';
+import hinaSoni from './hina-soni';
+import praveenChaudhary from './praveen-chaudhary';
 
-export const LOCAL_JOURNEYS: FounderJourney[] = [shraddhanjaliSonune, rohitGour, karthikR, ayushShaw, kishanPanchal];
+export const LOCAL_JOURNEYS: FounderJourney[] = [praveenChaudhary, hinaSoni, shraddhanjaliSonune, rohitGour, karthikR, ayushShaw, kishanPanchal];
