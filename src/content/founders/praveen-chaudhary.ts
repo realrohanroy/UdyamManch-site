@@ -5,10 +5,10 @@ import type { FounderJourney } from '@/lib/journey/types';
  * (received 2 Nov 2026).
  *
  * No founding year was given. Location: Himachal Pradesh (from Rohan,
- * 2 Nov 2026; city not known yet). No website or social links were sent,
- * and no registered company name was provided.
- * TODO: confirm founding year, city, and whether there is a website or
- * Instagram.
+ * 2 Nov 2026; city not known yet). Website healthssphere.com from Rohan,
+ * 2 Nov 2026; on that date it read "UltraPeak by HealthSphere | Launching
+ * soon". No registered company name was provided.
+ * TODO: confirm founding year and city.
  *
  * Photo: the founder's portrait, hosted on Cloudinary (received 2 Nov 2026).
  * The hero adds resizing and AVIF/WebP itself (lib/cloudinary.ts), so the
@@ -30,6 +30,7 @@ const journey: FounderJourney = {
       'An electrolyte energy-drink powder brand from Himachal Pradesh that makes everyday hydration convenient for people with busy and active lifestyles.',
     icon: 'droplet',
     industry: 'Food and Beverage',
+    website: 'https://healthssphere.com',
   },
 
   hero: {
