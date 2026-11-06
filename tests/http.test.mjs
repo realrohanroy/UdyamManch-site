@@ -12,6 +12,7 @@ import assert from 'node:assert/strict';
 import { BASE, get, follow, meta, canonical, jsonLd, internalLinks, images, textOf, imageInfo } from './lib/http.mjs';
 
 const JOURNEYS = [
+  { slug: 'punam-shail-manshail-mission', name: 'Punam Shail', sample: false },
   { slug: 'navjot-kaur-c11-aura', name: 'Navjot Kaur', sample: false },
   { slug: 'kartik-baladia-bookfood', name: 'Kartik Baladia', sample: false },
   { slug: 'praveen-chaudhary-ultrapeak', name: 'Praveen Chaudhary', sample: false },
@@ -265,6 +266,11 @@ describe('D. Content consistency across the site', () => {
       for (const p of ['/stories', '/founders']) {
         assert.ok(html[p].includes(`/founders/${j.slug}`), `${j.name} not linked from ${p}`);
       }
+      // A link elsewhere on /founders is not enough: the founder needs a card in the grid.
+      assert.ok(
+        new RegExp(`href="/founders/${j.slug}" class="fd-stretch"|class="fd-stretch" href="/founders/${j.slug}"`).test(html['/founders']),
+        `${j.name} has no card on /founders (missing listing?)`,
+      );
     });
   }
 

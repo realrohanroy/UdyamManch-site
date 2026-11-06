@@ -11,7 +11,7 @@ export function assertListings(journeys: FounderJourney[]): void {
     const l = j.listing;
     if (!l) continue;
     const at = `[${j.slug}] listing`;
-    if (!(STATE_CODES as readonly string[]).includes(l.state)) errors.push(`${at}: unknown state "${l.state}"`);
+    if (l.state !== undefined && !(STATE_CODES as readonly string[]).includes(l.state)) errors.push(`${at}: unknown state "${l.state}"`);
     if (!j.company.industry) errors.push(`${at}: company.industry is needed (it is the sector filter)`);
     if (l.metric) {
       if (!l.metric.value.trim() || l.metric.value.length > 12) errors.push(`${at}.metric.value must be 1 to 12 characters`);

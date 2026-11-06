@@ -18,7 +18,7 @@ export default function FounderCardView({ c, i, tone }: { c: FounderCard; i: num
         {c.sample && <span className="fd-tag fd-tag--sample">Sample</span>}
         {c.sponsored && <span className="fd-tag">Sponsored</span>}
         {c.editorsPick && <span className="fd-tag fd-tag--ed">Editor&rsquo;s pick</span>}
-        <span className="fd-pt__state">{c.stateName}</span>
+        {c.stateName && <span className="fd-pt__state">{c.stateName}</span>}
       </div>
       <div className="fd-bd">
         <div className="fd-sec">{c.sector.toUpperCase()}</div>

@@ -135,7 +135,7 @@ function ListView({ f, cards, sectors }: ListProps & { f: FounderFilters }) {
           {[...spotlightOf(cards), ...res.matches].map((c, i) => (
             <Link key={c.slug} href={`/founders/${c.slug}`} data-tone={i % 4} data-ini={initials(c.name)}>
               <span className="fd-ix__nm">{c.name}{c.sponsored && <em className="fd-tag fd-tag--solid">Sponsored</em>}</span>
-              <span className="fd-ix__sec">{c.sector}</span><span>{c.stateName}</span><span>{c.founded ?? ''}</span><span aria-hidden="true">&rarr;</span>
+              <span className="fd-ix__sec">{c.sector}</span><span>{c.stateName ?? ''}</span><span>{c.founded ?? ''}</span><span aria-hidden="true">&rarr;</span>
             </Link>
           ))}
         </div>

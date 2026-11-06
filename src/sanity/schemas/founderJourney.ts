@@ -280,8 +280,8 @@ export const founderJourneyType = defineType({
       fields: [
         defineField({
           name: 'state', title: 'State or union territory', type: 'string',
+          description: 'Leave empty if the founder has not told us. The card still shows, without a map pin.',
           options: { list: STATE_CODES.map((c) => ({ value: c, title: STATE_NAMES[c] })) },
-          validation: (r) => r.required(),
         }),
         defineField({
           name: 'metric', title: 'Headline number', type: 'object',

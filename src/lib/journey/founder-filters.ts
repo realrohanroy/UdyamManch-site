@@ -11,8 +11,9 @@ export interface FounderCard {
   name: string;
   company: string;
   sector: string;
-  state: StateCode;
-  stateName: string;
+  /** Missing when the founder has not told us their state. */
+  state?: StateCode;
+  stateName?: string;
   city?: string;
   founded?: number;
   image?: string;
@@ -81,7 +82,7 @@ export function queryFounders(cards: FounderCard[], f: FounderFilters) {
       !c.sponsored &&
       (!f.state || c.state === f.state) &&
       (!f.sector || c.sector === f.sector) &&
-      (!q || `${c.name} ${c.company} ${c.sector} ${c.stateName} ${c.topics.join(' ')}`.toLowerCase().includes(q)),
+      (!q || `${c.name} ${c.company} ${c.sector} ${c.stateName ?? ''} ${c.topics.join(' ')}`.toLowerCase().includes(q)),
   );
   return { matches, wall: matches.slice(0, PAGE_SIZE * f.page), total: matches.length };
 }

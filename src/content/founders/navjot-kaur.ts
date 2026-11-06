@@ -7,8 +7,9 @@ import type { FounderJourney } from '@/lib/journey/types';
  *
  * Not given: founding year (she says the idea came about three years ago, which
  * is not a founding date), city or state, website, social handles. So there is
- * no company.founded, location is "India", and there is no `listing` (the
- * Founders map needs a state). Her phone number and email are deliberately not
+ * no company.founded, location is "India", and `listing` has no state (her
+ * card shows on the Founders page without a map pin; add the state when she
+ * tells us). Her phone number and email are deliberately not
  * on the page.
  *
  * Product claims ("science-backed", "clinically studied ingredients") are the
@@ -211,6 +212,8 @@ const journey: FounderJourney = {
 
   topics: ['Skincare', 'Beauty and personal care', 'Women founders', 'D2C', 'Consumer brands'],
   related: ['praveen-chaudhary-ultrapeak', 'hina-soni-abcd'],
+
+  listing: {},
 
   seo: {
     title: 'Navjot Kaur: building C11 Aura, a skincare brand for pigmentation',

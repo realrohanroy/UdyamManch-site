@@ -23,7 +23,7 @@ function toCard(j: FounderJourney, now: number): FounderCard | null {
     company: j.company.name,
     sector: j.company.industry ?? 'Other',
     state: l.state,
-    stateName: STATE_NAMES[l.state],
+    stateName: l.state ? STATE_NAMES[l.state] : undefined,
     city: j.company.city,
     founded: Number.isFinite(founded) ? founded : undefined,
     image: j.hero.image?.url,
@@ -49,8 +49,11 @@ export function summarize(cards: FounderCard[]) {
   const sectors = new Map<string, number>();
   const years = new Map<number, number>();
   for (const c of cards) {
-    states[c.state] = (states[c.state] ?? 0) + 1;
-    (namesByState[c.state] ??= []).push(c.name);
+    // A founder without a known state is counted in the total but gets no map pin.
+    if (c.state) {
+      states[c.state] = (states[c.state] ?? 0) + 1;
+      (namesByState[c.state] ??= []).push(c.name);
+    }
     sectors.set(c.sector, (sectors.get(c.sector) ?? 0) + 1);
     if (c.founded) years.set(c.founded, (years.get(c.founded) ?? 0) + 1);
   }

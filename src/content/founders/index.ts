@@ -13,5 +13,6 @@ import hinaSoni from './hina-soni';
 import praveenChaudhary from './praveen-chaudhary';
 import kartikBaladia from './kartik-baladia';
 import navjotKaur from './navjot-kaur';
+import punamShail from './punam-shail';
 
-export const LOCAL_JOURNEYS: FounderJourney[] = [navjotKaur, kartikBaladia, praveenChaudhary, hinaSoni, shraddhanjaliSonune, rohitGour, karthikR, ayushShaw, kishanPanchal];
+export const LOCAL_JOURNEYS: FounderJourney[] = [punamShail, navjotKaur, kartikBaladia, praveenChaudhary, hinaSoni, shraddhanjaliSonune, rohitGour, karthikR, ayushShaw, kishanPanchal];

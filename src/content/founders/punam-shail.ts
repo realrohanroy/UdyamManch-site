@@ -11,17 +11,16 @@ import type { FounderJourney } from '@/lib/journey/types';
  * pageant titles, and how many women she has trained. The page states none of
  * them rather than guessing. Every plan is described as a goal.
  *
- * TODO: photo. Rohan will send it. Until then this journey is a draft (404, not
- * listed) and is not in index.ts. To publish: set PHOTO, hero.image width/height
- * and alt, seo.image, status 'published', publishedAt, then add it to index.ts
- * and tests/http.test.mjs.
+ * Photo: the founder's portrait, hosted on Cloudinary (received 6 Nov 2026,
+ * 1536x1024). The hero adds resizing and AVIF/WebP itself (lib/cloudinary.ts),
+ * so the URL here is the plain upload.
  */
-const PHOTO = '';
+const PHOTO = 'https://res.cloudinary.com/nkhny4aq/image/upload/v1793875583/8377409b-379c-440a-bfa7-ce4852563576.png';
 
 const journey: FounderJourney = {
   slug: 'punam-shail-manshail-mission',
-  status: 'draft',
-  publishedAt: '2026-11-05T04:00:00Z',
+  status: 'published',
+  publishedAt: '2026-11-06T17:30:00Z',
   author: 'Udyam Manch Team',
 
   founder: { name: 'Punam Shail', location: 'Telangana' },
@@ -40,7 +39,9 @@ const journey: FounderJourney = {
       'Actress, model and certified beautician Punam Shail founded **Manshail Mission** in Telangana to give women skills, confidence and a dignified stage, through its flagship platform BUTTA BOMMA.',
     image: {
       url: PHOTO,
-      alt: 'Punam Shail, founder of Manshail Mission',
+      alt: 'Punam Shail, founder of Manshail Mission, smiling at her desk with her chin on her hand, in a white and turquoise salwar suit, with a laptop in front of her and a shelf of pageant trophies, a crown and framed photos behind her',
+      width: 1536,
+      height: 1024,
     },
     portrait: 'photo',
     stage: {
@@ -200,6 +201,7 @@ const journey: FounderJourney = {
     title: 'Punam Shail: giving women the training and the stage she never had',
     description:
       'How actress and model Punam Shail built Manshail Mission and BUTTA BOMMA in Telangana to give women skills, confidence and a dignified stage.',
+    image: 'https://res.cloudinary.com/nkhny4aq/image/upload/c_fill,g_face,w_1200,h_630/f_jpg,q_auto/v1793875583/8377409b-379c-440a-bfa7-ce4852563576.png',
   },
 };
 

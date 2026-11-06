@@ -103,7 +103,11 @@ export type Placement = 'editors-pick' | 'sponsored';
  * `company`, so nothing is entered twice.
  */
 export interface Listing {
-  state: StateCode;
+  /**
+   * Leave out when the founder has not told us. The card still shows, just
+   * without a state label or a map pin. Never guess it.
+   */
+  state?: StateCode;
   /** One headline number for the card, e.g. "10,000" and "farmers trained". */
   /** Shown on the Founders page card. Every published founder is verified by the team first (DEC-029). */
   metric?: { value: string; label: string };

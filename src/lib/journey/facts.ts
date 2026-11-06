@@ -20,7 +20,7 @@ export const hostOf = (url: string): string => {
 };
 
 export function basedIn(j: FounderJourney): string | undefined {
-  const state = j.listing ? STATE_NAMES[j.listing.state] : undefined;
+  const state = j.listing?.state ? STATE_NAMES[j.listing.state] : undefined;
   const parts = [j.company.city, state].filter(Boolean) as string[];
   // Do not repeat a name that is already there ("Delhi, Delhi").
   const unique = parts.filter((p, i) => parts.indexOf(p) === i);
