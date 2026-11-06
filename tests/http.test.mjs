@@ -12,6 +12,8 @@ import assert from 'node:assert/strict';
 import { BASE, get, follow, meta, canonical, jsonLd, internalLinks, images, textOf, imageInfo } from './lib/http.mjs';
 
 const JOURNEYS = [
+  { slug: 'navjot-kaur-c11-aura', name: 'Navjot Kaur', sample: false },
+  { slug: 'kartik-baladia-bookfood', name: 'Kartik Baladia', sample: false },
   { slug: 'praveen-chaudhary-ultrapeak', name: 'Praveen Chaudhary', sample: false },
   { slug: 'hina-soni-abcd', name: 'Hina Soni', sample: false },
   { slug: 'shraddhanjali-sonune-sponsify', name: 'Shraddhanjali Sonune', sample: false },
@@ -259,12 +261,18 @@ describe('C. Share previews and SEO', () => {
 
 describe('D. Content consistency across the site', () => {
   for (const j of JOURNEYS) {
-    test(`D1 ${j.name} appears on Stories, Founders and Home`, () => {
-      for (const p of ['/stories', '/founders', '/']) {
+    test(`D1 ${j.name} appears on Stories and Founders`, () => {
+      for (const p of ['/stories', '/founders']) {
         assert.ok(html[p].includes(`/founders/${j.slug}`), `${j.name} not linked from ${p}`);
       }
     });
   }
+
+  // Home shows only the latest few items (page.tsx slices the feed), so older
+  // founders rightly drop off it. The newest one must always be there.
+  test(`D1 newest founder (${JOURNEYS[0].name}) appears on Home`, () => {
+    assert.ok(html['/'].includes(`/founders/${JOURNEYS[0].slug}`), `${JOURNEYS[0].name} not linked from /`);
+  });
 
   test('D2 no hard-coded or fake dates ("2h ago", "15 Oct 2026" on every item)', () => {
     for (const p of ['/', '/stories']) {

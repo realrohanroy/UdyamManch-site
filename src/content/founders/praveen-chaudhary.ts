@@ -4,10 +4,11 @@ import type { FounderJourney } from '@/lib/journey/types';
  * Praveen Chaudhary, UltraPeak. Written from the founder's own answers
  * (received 2 Nov 2026).
  *
- * No founding year was given. No location or city was given. No website or
- * social links were sent, and no registered company name was provided.
- * TODO: confirm founding year, location (state and city), and whether there
- * is a website or Instagram.
+ * No founding year was given. Location: Himachal Pradesh (from Rohan,
+ * 2 Nov 2026; city not known yet). Website healthssphere.com from Rohan,
+ * 2 Nov 2026; on that date it read "UltraPeak by HealthSphere | Launching
+ * soon". No registered company name was provided.
+ * TODO: confirm founding year and city.
  *
  * Photo: the founder's portrait, hosted on Cloudinary (received 2 Nov 2026).
  * The hero adds resizing and AVIF/WebP itself (lib/cloudinary.ts), so the
@@ -21,14 +22,15 @@ const journey: FounderJourney = {
   publishedAt: '2026-11-02T04:00:00Z',
   author: 'Udyam Manch Team',
 
-  founder: { name: 'Praveen Chaudhary' },
+  founder: { name: 'Praveen Chaudhary', location: 'Himachal Pradesh' },
 
   company: {
     name: 'UltraPeak',
     summary:
-      'An electrolyte energy-drink powder brand that makes everyday hydration convenient for people with busy and active lifestyles.',
+      'An electrolyte energy-drink powder brand from Himachal Pradesh that makes everyday hydration convenient for people with busy and active lifestyles.',
     icon: 'droplet',
     industry: 'Food and Beverage',
+    website: 'https://healthssphere.com',
   },
 
   hero: {
@@ -182,9 +184,9 @@ const journey: FounderJourney = {
   topics: ['Food and Beverage', 'Health', 'Hydration', 'Consumer brands'],
   related: ['hina-soni-abcd', 'rohit-gour-animation-cult'],
 
-  // No founding year or location was given, so no listing.state and no
-  // listing.metric with a year. This means UltraPeak will not appear on the
-  // Founders page map until we know the state. TODO: get state and year.
+  listing: {
+    state: 'hp',
+  },
 
   seo: {
     title: 'Praveen Chaudhary: making electrolyte hydration part of everyday life',
