@@ -10,7 +10,7 @@ import { cld } from '@/lib/cloudinary';
 const KISHAN_PORTRAIT = 'https://res.cloudinary.com/nkhny4aq/image/upload/v1792668702/double-portrait-yellow-halo.webp';
 const KISHAN_MAP = 'https://res.cloudinary.com/nkhny4aq/image/upload/v1792668717/india-network-map.png';
 
-export default function PinboardHero() {
+export default function PinboardHero({ stage }: { stage?: React.ReactNode }) {
   const { pinnedItems, togglePin, isPinned } = useBoard();
   const [activeTab, setActiveTab] = useState<'editors' | 'myboard'>('editors');
   const [activeChip, setActiveChip] = useState<string>('all');
@@ -41,6 +41,8 @@ export default function PinboardHero() {
       <MagneticDots />
       {/* Title & Intro */}
       <div className="pi">
+        <div className="pi-head">
+        <span className="pi-kick">Founder stories from across India</span>
         <h1>
           <span className="pw"><i>The</i></span>{' '}
           <span className="pw"><i>unvarnished</i></span>{' '}
@@ -49,7 +51,18 @@ export default function PinboardHero() {
           <span className="pw"><i>Indian</i></span>{' '}
           <span className="pw"><i>enterprise.</i></span>
         </h1>
-        <p>A working archive of startups, founders and the business ideas that survive first contact with reality.</p>
+        </div>
+        <div className="pi-side">
+          <p>A working archive of startups, founders and the business ideas that survive first contact with reality.</p>
+          <div className="pi-acts">
+            <Link className="pi-btn" href="/founders">
+              Meet the founders
+            </Link>
+            <a className="pi-link" href="#about">
+              New here? See how it works
+            </a>
+          </div>
+        </div>
       </div>
 
       {/* Scrolling Photo Strip */}
@@ -63,8 +76,10 @@ export default function PinboardHero() {
         </div>
       </div>
 
+      {stage}
+
       {/* Tabs */}
-      <div className="mbt" role="tablist">
+      <div className="mbt" role="tablist" id="board">
         <button
           role="tab"
           aria-selected={activeTab === 'editors'}

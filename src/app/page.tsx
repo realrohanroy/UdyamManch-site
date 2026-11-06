@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import PinboardHero from '@/components/PinboardHero';
 import NewsletterBand from '@/components/NewsletterBand';
+import ManchStage, { type StageVoice } from '@/components/ManchStage';
 import { getFeed } from '@/lib/content';
 import { getJourneys } from '@/lib/journey/repo';
 
@@ -31,10 +32,22 @@ export default async function HomePage() {
     sample: j.sample,
   }));
 
+  // Speech bubbles on the stage: each founder's own short quote, never invented.
+  // Skip a quote that opens with the same word as one already picked, so they read differently.
+  const voices: StageVoice[] = [];
+  for (const j of journeys) {
+    const quote = j.hero.stage?.quote;
+    if (j.sample || !quote) continue;
+    const first = quote.split(' ')[0].toLowerCase();
+    if (voices.some((v) => v.quote.split(' ')[0].toLowerCase() === first)) continue;
+    voices.push({ quote, name: j.founder.name, company: j.company.name, href: `/founders/${j.slug}` });
+    if (voices.length === 3) break;
+  }
+
   return (
     <div className="w">
-      {/* 1. Pinboard Hero (Full Bleed) */}
-      <PinboardHero />
+      {/* 1. Pinboard Hero (Full Bleed), with the stage story before the board */}
+      <PinboardHero stage={<ManchStage voices={voices} />} />
 
       {/* 2. Trending Strip */}
       <section className="trend" aria-label="Trending">

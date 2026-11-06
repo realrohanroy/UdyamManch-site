@@ -67,6 +67,17 @@
   /* Page curtain (8.4). Light: yellow with a blue edge. Dark: blue with a yellow edge. */
   --curtain-lead: var(--sky);
   --curtain-main: var(--hl);
+
+  /* Home page stage founder (DEC-030): a cartoon in kurta pyjama. Outline stays dark
+     in both themes, like ink on a cel; dark mode only softens the fills. */
+  --ms-line: #2b2140;
+  --ms-skin: #c68955;
+  --ms-hair: #2b1b14;
+  --ms-kurta: #f5a524;
+  --ms-trim: #c2410c;
+  --ms-pj: #fbf6ec;
+  --ms-shoe: #7c3f1d;
+  --ms-cheek: #ef8e74;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -102,6 +113,14 @@
     --spot: #2b2a52;
     --curtain-lead: #ffbc1f; /* dark: yellow edge on blue */
     --curtain-main: var(--hl); /* dark --hl is blue */
+  --ms-line: #1a1430;
+  --ms-skin: #b97f4f;
+  --ms-hair: #24160f;
+  --ms-kurta: #e9971b;
+  --ms-trim: #d4561c;
+  --ms-pj: #e9e2d3;
+  --ms-shoe: #6e3818;
+  --ms-cheek: #d9785f;
   }
 }
 
@@ -137,4 +156,12 @@
   --spot: #2b2a52;
   --curtain-lead: #ffbc1f; /* dark: yellow edge on blue */
   --curtain-main: var(--hl); /* dark --hl is blue */
+  --ms-line: #1a1430;
+  --ms-skin: #b97f4f;
+  --ms-hair: #24160f;
+  --ms-kurta: #e9971b;
+  --ms-trim: #d4561c;
+  --ms-pj: #e9e2d3;
+  --ms-shoe: #6e3818;
+  --ms-cheek: #d9785f;
 }

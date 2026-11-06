@@ -5,6 +5,7 @@ import '@/styles/editorial.css';
 import '@/styles/magnetic-dots.css';
 import '@/styles/footer.css';
 import '@/styles/curtain.css';
+import '@/styles/manch-stage.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MyBoardDrawer from '@/components/MyBoardDrawer';

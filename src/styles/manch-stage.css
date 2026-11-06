@@ -1,0 +1,556 @@
+/* ==========================================================================
+   Manch stage: "What is Udyam Manch" acted out on a stage
+   (components/ManchStage.tsx). Prefix `ms`. Tokens only. Motion is transform
+   and opacity only.
+
+   Without .ms-live (no JavaScript, or reduced motion) the defaults below are
+   the finished scene and all five lines show as a list. .ms-live makes the
+   section tall, pins the scene and lets scroll drive:
+     --open   curtains, 0 closed to 1 open
+     --light  spotlight
+     --mx     founder position on the stage, in scene units
+     --dir    1 facing right, -1 facing left (walking back up the page)
+     --ph     walk cycle frame, 0 to 1, from distance travelled
+     --aud    audience rising
+     --clap   audience clapping at the bow
+     data-pose  stand | peek | walk | tap | talk | bow
+   and per quote bubble: --s (pop out of his mouth) and --f (fall to the board).
+   ========================================================================== */
+
+.ms {
+  --open: 1;
+  --light: 1;
+  --mx: 384;
+  --dir: 1;
+  --ph: 0;
+  --aud: 1;
+  --clap: 0;
+  position: relative;
+  margin: 18px 0 30px;
+}
+
+.ms-sticky {
+  display: grid;
+  grid-template-columns: minmax(0, .74fr) minmax(0, 1.26fr);
+  gap: clamp(20px, 4vw, 64px);
+  align-items: center;
+}
+
+/* ---------- Copy column ---------- */
+
+.ms-copy { min-width: 0; }
+
+.ms-beats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 26px;
+}
+
+.ms-kick {
+  display: block;
+  font: 700 12px/1.2 var(--hd);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--acc);
+}
+
+.ms-beat h3 {
+  font: 800 clamp(28px, 3.3vw, 48px)/1 var(--hd);
+  letter-spacing: -.03em;
+  margin: 12px 0 14px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.ms-beat mark {
+  background: linear-gradient(transparent 58%, var(--hl) 58% 92%, transparent 92%);
+  color: inherit;
+  padding: 0 3px;
+}
+
+.ms-beat p {
+  margin: 0;
+  font: 400 clamp(17px, 1.4vw, 20px)/1.5 var(--bd);
+  color: var(--mute);
+  max-width: 40ch;
+}
+
+.ms-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+  margin-top: 22px;
+  font: 600 15px/1 var(--hd);
+}
+
+.ms-cta a { color: var(--ink); }
+
+.ms-btn {
+  display: inline-block;
+  padding: 13px 22px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg) !important;
+  text-decoration: none;
+  transition: transform .25s;
+}
+
+.ms-btn:hover { transform: translateY(-2px); }
+
+.ms-foot { display: none; }
+
+/* ---------- Scene ---------- */
+
+.ms-scene {
+  --svg-top: 0%;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 640 / 440;
+  container-type: inline-size;
+  justify-self: end;
+}
+
+/* The stage is a note pinned to the board: rounded, lifted, two tacks. */
+.ms-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.ms-tack {
+  position: absolute;
+  z-index: 2;
+  top: calc(var(--svg-top) - 7px);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--pin-pink);
+  box-shadow: var(--shadow);
+}
+.ms-tack[data-side="l"] { left: 9%; }
+.ms-tack[data-side="r"] { right: 9%; background: var(--blue); }
+
+.ms-wall { fill: var(--paper); opacity: .6; }
+
+.ms-banner rect { fill: var(--paper); stroke: var(--tone-gold-line); stroke-width: 2; }
+
+/* Logo on the name board: light file in light mode, dark file in dark mode,
+   following the same three theme rules as the tokens. */
+.ms-logo-d { display: none; }
+:root[data-theme="dark"] .ms-logo-l { display: none; }
+:root[data-theme="dark"] .ms-logo-d { display: inline; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ms-logo-l { display: none; }
+  :root:not([data-theme="light"]) .ms-logo-d { display: inline; }
+}
+
+.ms-beam-a { stop-color: var(--hl); stop-opacity: .9; }
+.ms-beam-b { stop-color: var(--hl); stop-opacity: .15; }
+.ms-beam { opacity: calc(var(--light) * .75); }
+.ms-pool { fill: var(--hl); opacity: calc(var(--light) * .8); }
+
+.ms-deck { fill: var(--paper); stroke: var(--line); stroke-width: 2; }
+.ms-face { fill: var(--line); }
+.ms-plank { stroke: var(--line); stroke-width: 2; }
+
+.ms-mic ellipse, .ms-mic rect { fill: var(--ink); }
+.ms-mic line { stroke: var(--ink); stroke-width: 4; stroke-linecap: round; }
+.ms-mic .ms-grille { fill: var(--mute); }
+
+.ms-waves path {
+  fill: none;
+  stroke: var(--acc);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.ms-tap {
+  fill: var(--acc);
+  font: 700 17px var(--script);
+  opacity: 0;
+}
+
+.ms-curtain path:first-child { fill: var(--indigo); }
+.ms-fold { fill: none; stroke: var(--ink); stroke-width: 3; opacity: .18; }
+.ms-cl { transform: scaleX(calc(1 - .8 * var(--open))); transform-origin: 0 0; }
+.ms-cr { transform: scaleX(calc(1 - .8 * var(--open))); transform-origin: 640px 0; }
+
+.ms-hint {
+  fill: var(--foot-ink);
+  font: 700 26px var(--script);
+  opacity: 0;
+}
+
+.ms-pelmet { fill: var(--indigo); }
+.ms-garland circle { fill: var(--tone-gold-line); }
+.ms-garland circle[data-alt] { fill: var(--tone-gold-ink); }
+
+/* ---------- The founder ----------
+   Feet at the group origin. Inside SVG, CSS px are scene units and a group
+   turns around its own origin, which is why every joint sits in a translated
+   wrapper. Near limbs are .ms-a, far limbs .ms-b (drawn darker for depth). */
+
+.ms-man { transform: translate(calc(var(--mx) * 1px), 362px) scale(calc(var(--dir) * 1.2), 1.2); }
+.ms-shadow { fill: var(--ms-line); opacity: .16; transition: transform .4s cubic-bezier(.3, 1.3, .5, 1); }
+.ms-far { filter: brightness(.82); }
+
+.ms-o { fill: none; stroke: var(--ms-line); stroke-width: 13; stroke-linecap: round; }
+.ms-o.ms-thin { stroke-width: 9.5; }
+.ms-pj { fill: none; stroke: var(--ms-pj); stroke-width: 8.5; stroke-linecap: round; }
+.ms-sleeve { fill: none; stroke: var(--ms-kurta); stroke-width: 8.5; stroke-linecap: round; }
+.ms-arm-skin { fill: none; stroke: var(--ms-skin); stroke-width: 5; stroke-linecap: round; }
+.ms-skin { fill: var(--ms-skin); stroke: var(--ms-line); stroke-width: 2.5; }
+.ms-shoe { fill: var(--ms-shoe); stroke: var(--ms-line); stroke-width: 2.5; stroke-linejoin: round; }
+.ms-kurta { fill: var(--ms-kurta); stroke: var(--ms-line); stroke-width: 2.5; stroke-linejoin: round; }
+.ms-trim { fill: none; stroke: var(--ms-trim); stroke-width: 3; stroke-linecap: round; }
+.ms-trim.ms-thin { stroke-width: 2; }
+.ms-badge { fill: var(--pin-pink); stroke: var(--ms-line); stroke-width: 1.5; }
+.ms-hair { fill: var(--ms-hair); stroke: var(--ms-line); stroke-width: 2; stroke-linejoin: round; }
+.ms-brow { fill: none; stroke: var(--ms-hair); stroke-width: 2.6; stroke-linecap: round; }
+.ms-eye { fill: var(--ms-line); }
+.ms-line { fill: none; stroke: var(--ms-line); stroke-width: 2.2; stroke-linecap: round; }
+.ms-cheek { fill: var(--ms-cheek); opacity: .55; }
+.ms-happy { fill: none; stroke: var(--ms-line); stroke-width: 2.4; stroke-linecap: round; opacity: 0; }
+.ms-mouth { fill: var(--ms-line); opacity: 0; transform-box: fill-box; transform-origin: center; }
+.ms-eyes { transform-box: fill-box; transform-origin: center; }
+
+/* Joints ease between poses. */
+.ms-thigh, .ms-shin, .ms-ankle, .ms-up, .ms-fore, .ms-upper, .ms-lean, .ms-head {
+  transition: transform .4s cubic-bezier(.3, 1.3, .5, 1);
+}
+
+/* Standing. */
+.ms-thigh.ms-a { transform: rotate(-5deg); }
+.ms-thigh.ms-b { transform: rotate(6deg); }
+.ms-shin, .ms-ankle { transform: rotate(0deg); }
+.ms-up.ms-a { transform: rotate(12deg); }
+.ms-fore.ms-a { transform: rotate(-16deg); }
+.ms-up.ms-b { transform: rotate(-10deg); }
+.ms-fore.ms-b { transform: rotate(-12deg); }
+
+/* Talking: the finished scene, and the talk beat when live. */
+.ms:not(.ms-live) .ms-up.ms-a, .ms[data-pose="talk"] .ms-up.ms-a { transform: rotate(-64deg); }
+.ms:not(.ms-live) .ms-fore.ms-a, .ms[data-pose="talk"] .ms-fore.ms-a { transform: rotate(-56deg); }
+.ms:not(.ms-live) .ms-smile, .ms[data-pose="talk"] .ms-smile { opacity: 0; }
+.ms:not(.ms-live) .ms-mouth, .ms[data-pose="talk"] .ms-mouth { opacity: 1; }
+.ms:not(.ms-live) .ms-waves path, .ms[data-pose="talk"] .ms-waves path { opacity: .7; }
+
+/* Peeking out from behind the curtain, waving. */
+.ms[data-pose="peek"] .ms-lean { transform: rotate(15deg); }
+.ms[data-pose="peek"] .ms-up.ms-a { transform: rotate(-126deg); }
+.ms[data-pose="peek"] .ms-fore.ms-a { animation: ms-hello .42s ease-in-out infinite alternate; }
+
+/* At the mic: tap tap. */
+.ms[data-pose="tap"] .ms-up.ms-a { transform: rotate(-80deg); }
+.ms[data-pose="tap"] .ms-fore.ms-a { transform: rotate(-26deg); animation: ms-tapping .2s ease-in-out infinite alternate; }
+.ms[data-pose="tap"] .ms-tap { opacity: 1; animation: ms-pulse .4s ease-out infinite alternate; }
+.ms[data-pose="tap"] .ms-waves path { animation: ms-wave .4s ease-out infinite; animation-delay: calc(var(--k) * .08s); }
+
+/* The bow, with happy eyes. */
+.ms[data-pose="bow"] .ms-lean { transform: translateX(-64px); } /* step back from the mic first */
+.ms[data-pose="bow"] .ms-shadow { transform: translateX(-64px); }
+.ms[data-pose="bow"] .ms-upper { transform: rotate(40deg); }
+.ms[data-pose="bow"] .ms-up.ms-a { transform: rotate(-18deg); }
+.ms[data-pose="bow"] .ms-fore.ms-a { transform: rotate(-100deg); }
+.ms[data-pose="bow"] .ms-up.ms-b { transform: rotate(16deg); }
+.ms[data-pose="bow"] .ms-eyes { opacity: 0; }
+.ms[data-pose="bow"] .ms-happy { opacity: 1; }
+
+/* Audience, from behind. */
+.ms-fan {
+  --a: clamp(0, calc(var(--aud) * 1.8 - var(--d) * .16), 1);
+  fill: var(--mute);
+  opacity: var(--a);
+  transform: translateY(calc((1 - var(--a)) * 46px));
+}
+.ms-fan-arm { fill: none; stroke: var(--mute); stroke-width: 7; stroke-linecap: round; }
+.ms-fan .ms-phone { fill: var(--acc2); }
+.ms-clap { fill: none; stroke: var(--tone-gold-line); stroke-width: 3; stroke-linecap: round; opacity: var(--clap); }
+
+/* ---------- Quote bubbles ----------
+   Real founder quotes; each links to that founder's story. They come out of
+   his mouth (--dx, --dy point back at it), then fold into pinned notes and fall. */
+
+.ms-says {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ms-say {
+  --s: 1;
+  --f: 0;
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  pointer-events: auto;
+  transform-origin: var(--ox) var(--oy);
+  transform:
+    translate(calc((1 - var(--s)) * var(--dx)), calc((1 - var(--s)) * var(--dy) + var(--f) * 100cqw))
+    rotate(calc(var(--f) * var(--rot)))
+    scale(var(--s));
+  opacity: clamp(0, calc(var(--s) * 1.4 - max(0, var(--f) - .72) * 3.6), 1);
+}
+
+.ms-say[data-i="0"] { --x: 7%; --y: 14%; --w: 37%; --ox: 85%; --oy: 100%; --tx: 78%; --rot: -9deg; --dx: 26cqw; --dy: 15cqw; --pin: var(--pin-pink); }
+.ms-say[data-i="1"] { --x: 52%; --y: 11%; --w: 35%; --ox: 25%; --oy: 100%; --tx: 22%; --rot: 11deg; --dx: 2cqw; --dy: 19cqw; --pin: var(--blue); }
+.ms-say[data-i="2"] { --x: 13%; --y: 43%; --w: 34%; --ox: 100%; --oy: 70%; --tx: 84%; --rot: -5deg; --dx: 20cqw; --dy: -2cqw; --pin: var(--indigo); }
+
+/* Comic bubble: a drawn outline and a slightly uneven, hand-cut shape. */
+.ms-bub {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  padding: 12px 15px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow);
+  border-radius:
+    calc(20px - var(--f) * 17px) calc(26px - var(--f) * 23px) calc(18px - var(--f) * 15px) calc(24px - var(--f) * 21px) /
+    calc(24px - var(--f) * 21px) calc(18px - var(--f) * 15px) calc(26px - var(--f) * 23px) calc(20px - var(--f) * 17px);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.ms-bub::after { /* tail, pointing at his mouth */
+  content: '';
+  position: absolute;
+  left: var(--tx);
+  bottom: -8px;
+  width: 14px;
+  height: 14px;
+  background: var(--paper);
+  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  transform: rotate(45deg) skew(8deg, 8deg);
+  opacity: calc(1 - var(--f) * 4);
+}
+
+.ms-bub::before { /* pin, appears as the bubble turns into a note */
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: calc(50% - 6px);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--pin);
+  box-shadow: var(--shadow);
+  opacity: clamp(0, calc(var(--f) * 5), 1);
+}
+
+.ms-q { font: italic 400 clamp(13px, 2.5cqw, 18px)/1.3 var(--bd); }
+.ms-who { font: 600 clamp(10px, 1.6cqw, 12px)/1.25 var(--hd); color: var(--mute); }
+.ms-bub:hover .ms-who { color: var(--acc); }
+.ms-bub:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
+
+/* ---------- Live: scroll story ---------- */
+
+.ms-live { height: 360vh; margin: 0; }
+
+.ms-live .ms-sticky {
+  position: sticky;
+  top: 68px;
+  height: calc(100vh - 68px);
+  height: calc(100svh - 68px);
+}
+
+/* Fill the pinned screen without spilling past it on short, wide windows. */
+@media (min-width: 761px) {
+  .ms:not(.ms-live) .ms-sticky { align-items: start; }
+  .ms:not(.ms-live) .ms-scene { position: sticky; top: 96px; }
+  .ms-live .ms-scene { width: min(100%, calc((100svh - 150px) * 640 / 440)); }
+}
+
+.ms-live .ms-beats { gap: 0; }
+
+/* Outgoing line leaves quickly; the next one waits for it, so they never overlap. */
+.ms-live .ms-beat {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity .2s ease-in, transform .2s ease-in;
+  pointer-events: none;
+}
+
+.ms-live .ms-beat[data-on],
+.ms-live .ms-beat:focus-within {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition: opacity .45s cubic-bezier(.2, .8, .2, 1) .18s, transform .45s cubic-bezier(.2, .8, .2, 1) .18s;
+}
+
+.ms-live .ms-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 30px;
+  max-width: 40ch;
+}
+
+/* Progress, and a way to jump to any part. */
+.ms-rail { display: flex; gap: 4px; }
+.ms-rail button {
+  width: 34px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  position: relative;
+}
+.ms-rail button::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 10px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  transition: background-color .3s, transform .25s;
+}
+.ms-rail button[data-on]::before { background: var(--acc); }
+.ms-rail button:hover::before { transform: scaleY(1.6); }
+.ms-rail button:focus-visible { outline: 2px solid var(--acc); outline-offset: 1px; border-radius: 4px; }
+
+.ms-skip {
+  font: 600 14px/1 var(--hd);
+  color: var(--mute);
+  text-underline-offset: 3px;
+}
+.ms-skip:hover { color: var(--ink); }
+
+.ms-live[data-start] .ms-hint { opacity: 1; animation: ms-pulse 1.2s ease-in-out infinite alternate; }
+
+/* A focused bubble is always readable, whatever the scroll position. */
+.ms-live .ms-say:focus-within { --s: 1 !important; --f: 0 !important; visibility: visible !important; }
+
+/* Walk cycle, scrubbed: paused animations whose frame is picked by --ph.
+   The far leg and the near arm run half a cycle behind the near leg. */
+.ms-live[data-pose="walk"] :is(.ms-thigh, .ms-shin, .ms-ankle, .ms-up, .ms-fore, .ms-rig) {
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-delay: calc(var(--ph) * -1s);
+}
+.ms-live[data-pose="walk"] .ms-b { animation-delay: calc(var(--ph) * -1s - .5s); }
+.ms-live[data-pose="walk"] .ms-thigh { animation-name: ms-thigh; }
+.ms-live[data-pose="walk"] .ms-shin { animation-name: ms-shin; }
+.ms-live[data-pose="walk"] .ms-ankle { animation-name: ms-ankle; }
+.ms-live[data-pose="walk"] .ms-up { animation-name: ms-arm-up; }
+.ms-live[data-pose="walk"] .ms-fore { animation-name: ms-arm-fore; }
+.ms-live[data-pose="walk"] .ms-rig { animation-name: ms-bob; }
+
+/* Life: blinking, talking, nodding, gesturing, a bit of crowd sway. */
+.ms-live .ms-eyes { animation: ms-blink 4.2s infinite; }
+.ms-live[data-pose="talk"] .ms-mouth { animation: ms-flap .24s ease-in-out infinite alternate; }
+.ms-live[data-pose="talk"] .ms-head { animation: ms-nod 2.4s ease-in-out infinite; }
+.ms-live[data-pose="talk"] .ms-up.ms-a { animation: ms-gest-up 2.4s ease-in-out infinite; }
+.ms-live[data-pose="talk"] .ms-fore.ms-a { animation: ms-gest-fore 2.4s ease-in-out infinite; }
+.ms-live[data-pose="talk"] .ms-waves path { animation: ms-wave 1.4s ease-out infinite; animation-delay: calc(var(--k) * .2s); }
+.ms-live .ms-fan-sway { animation: ms-sway 3s ease-in-out infinite alternate; animation-delay: calc(var(--d) * -.7s); }
+.ms-live[data-pose="bow"] .ms-clap { animation: ms-pulse .3s ease-in-out infinite alternate; }
+
+@keyframes ms-thigh {
+  0% { transform: rotate(-28deg); } 15% { transform: rotate(-14deg); } 30% { transform: rotate(2deg); }
+  50% { transform: rotate(24deg); } 62% { transform: rotate(14deg); } 75% { transform: rotate(-12deg); }
+  88% { transform: rotate(-30deg); } 100% { transform: rotate(-28deg); }
+}
+@keyframes ms-shin {
+  0% { transform: rotate(4deg); } 15% { transform: rotate(18deg); } 30% { transform: rotate(6deg); }
+  50% { transform: rotate(10deg); } 62% { transform: rotate(52deg); } 75% { transform: rotate(62deg); }
+  88% { transform: rotate(22deg); } 100% { transform: rotate(4deg); }
+}
+@keyframes ms-ankle {
+  0% { transform: rotate(12deg); } 15% { transform: rotate(-4deg); } 30% { transform: rotate(-8deg); }
+  50% { transform: rotate(-9deg); } 62% { transform: rotate(-36deg); } 75% { transform: rotate(-40deg); }
+  88% { transform: rotate(3deg); } 100% { transform: rotate(12deg); }
+}
+@keyframes ms-arm-up {
+  0% { transform: rotate(22deg); } 25% { transform: rotate(0deg); } 50% { transform: rotate(-24deg); }
+  75% { transform: rotate(0deg); } 100% { transform: rotate(22deg); }
+}
+@keyframes ms-arm-fore {
+  0% { transform: rotate(-10deg); } 50% { transform: rotate(-36deg); } 100% { transform: rotate(-10deg); }
+}
+@keyframes ms-bob {
+  0% { transform: translateY(0); } 15% { transform: translateY(3px); } 35% { transform: translateY(-3px); }
+  50% { transform: translateY(0); } 65% { transform: translateY(3px); } 85% { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
+@keyframes ms-hello { from { transform: rotate(-38deg); } to { transform: rotate(18deg); } }
+@keyframes ms-tapping { from { transform: rotate(-22deg); } to { transform: rotate(-34deg); } }
+@keyframes ms-gest-up { 0%, 100% { transform: rotate(-56deg); } 50% { transform: rotate(-80deg); } }
+@keyframes ms-gest-fore { 0%, 100% { transform: rotate(-44deg); } 50% { transform: rotate(-76deg); } }
+@keyframes ms-nod { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(5deg); } 60% { transform: rotate(-2deg); } }
+@keyframes ms-flap { from { transform: scaleY(.25); } to { transform: scaleY(1); } }
+@keyframes ms-blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+@keyframes ms-wave { 0% { opacity: 0; } 30% { opacity: .9; } 100% { opacity: 0; } }
+@keyframes ms-pulse { from { opacity: .55; } to { opacity: 1; } }
+@keyframes ms-sway { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg); } }
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 760px) {
+  .ms-sticky {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .ms-live { height: 320vh; }
+  .ms-live .ms-sticky { align-content: center; }
+  .ms-live .ms-foot { margin-top: 12px; }
+  .ms-beat h3 { font-size: clamp(27px, 7.4vw, 34px); margin: 8px 0 10px; }
+  .ms-beat p { font-size: 16px; }
+  .ms-live .ms-beat p { min-height: 4.5em; }
+  .ms-rail button { width: 28px; }
+
+  /* Taller scene: the stage sits at the bottom and the quotes float above it. */
+  .ms-scene { --svg-top: 26.6%; aspect-ratio: 640 / 600; }
+  .ms-svg { top: auto; height: 73.4%; border-radius: 10px; }
+  .ms-say[data-i="0"] { --x: 1%; --y: 1%; --w: 48%; --dx: 23cqw; --dy: 39cqw; }
+  .ms-say[data-i="1"] { --x: 51%; --y: 7%; --w: 48%; --dx: 0cqw; --dy: 30cqw; }
+  .ms-say[data-i="2"] { --x: 3%; --y: 39%; --w: 46%; --dx: 15cqw; --dy: 8cqw; }
+  .ms-co { display: none; }
+  .ms-q { font-size: 13px; }
+  .ms-who { font-size: 10.5px; }
+  .ms-bub { padding: 10px 12px; }
+}
+
+/* ---------- Board landing ---------- */
+
+/* Board notes drop onto the board as they scroll into view, picking up where
+   the falling quotes leave off. Browsers without scroll timelines show them
+   in place. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .phero .pbcard {
+      animation: ms-land linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 80%;
+    }
+  }
+}
+
+@keyframes ms-land {
+  from { opacity: 0; translate: 0 -56px; rotate: 5deg; }
+  to { opacity: 1; translate: 0 0; rotate: 0deg; }
+}
+
+#board { scroll-margin-top: 90px; }

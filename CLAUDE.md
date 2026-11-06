@@ -33,7 +33,7 @@ Visual source of truth: the prototype `index.html`.
 - Colours only via tokens in `src/styles/tokens.css`. Every token is defined
   for light, system dark, and `[data-theme="dark"]`. No hex in components.
 - Class prefixes: `pb` pinboard, `mb` My board, `ig` Instagram, `t` tour,
-  `fj` founder journey.
+  `fj` founder journey, `ms` manch stage (home page story).
 - Metadata, Open Graph and JSON-LD are server rendered (`generateMetadata`).
 - Placeholder content sets `sample: true` (label, noindex, not in sitemap).
 
